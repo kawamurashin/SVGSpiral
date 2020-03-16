@@ -47,6 +47,5 @@ namespace View.LogarithmicSpiralManager
             }
             this._polyline.setAttributeNS(null, "points", value);
         }
-
     }
 }

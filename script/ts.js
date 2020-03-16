@@ -52,15 +52,15 @@ var View;
         var ArchimedesManager = (function () {
             function ArchimedesManager() {
                 var _this = this;
-                this._spiral = new ArchimedesSpiralManager();
-                this._spiral.draw();
-                this.setInputValue();
                 var change = function () {
                     _this.changeHandler();
                 };
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
+                this._spiral = new ArchimedesSpiralManager();
+                this._spiral.draw();
+                this.setInputValue();
                 var input = document.getElementById("ArchimedesRotationSlider");
                 input.addEventListener("change", change);
                 input.addEventListener("mousemove", mousemove);

@@ -1,7 +1,6 @@
 namespace View.Archimedes.Spiral {
     export class ArchimedesSpiralManager {
         private readonly _polyline;
-
         constructor() {
             let svg = document.getElementById("ArchimedesSpiral");
             this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
@@ -9,9 +8,7 @@ namespace View.Archimedes.Spiral {
             this._polyline.setAttributeNS(null, "stroke", "#FFF");
             this._polyline.setAttributeNS(null, "stroke-width", "2");
             this._polyline.setAttributeNS(null, "fill", "none");
-
         }
-
         public draw(): void {
             let svg = document.getElementById("ArchimedesSpiral");
             const width: number = Number(svg.getAttribute("width"));

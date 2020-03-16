@@ -1,6 +1,5 @@
 ///<reference path="View/ViewManager.ts"/>
 import ViewManager = View.ViewManager;
-
 class Main
 {
     constructor()
@@ -8,7 +7,6 @@ class Main
         let viewManager = new ViewManager();
     }
 }
-
 window.addEventListener("load", () => {
     new Main();
 });
