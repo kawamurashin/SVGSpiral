@@ -30,3 +30,7 @@ body {
 input[type=range] {
     width:300px;
 }
+.title-head{
+    display: inline-block;
+    width: 120px;
+}

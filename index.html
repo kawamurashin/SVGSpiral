@@ -10,14 +10,36 @@
     <div>
         対数螺旋<br>
         <svg id="LogarithmicSpiral" class="svg" viewBox="0 0 480 480" width="480" height="480" />
+        <div>
+            <label for="LogarithmicRotationSlider" class="title-head">Rotation</label>
+            <input type="range" id="LogarithmicRotationSlider" value="150" min="30" max="400" />
+        </div>
+        <div>
+            <label for="LogarithmicSlider" class="title-head">Starting Angle</label>
+            <input type="range" id="LogarithmicSlider" value="150" min="30" max="400" />
+        </div>
+        <div>
+            <input type="radio" name="LogarithmicClockwiseRadio" value="clockwise" checked> clockwise
+            <input type="radio" name="LogarithmicClockwiseRadio" value="anticlockwise"> anticlockwise
+        </div>
     </div>
     <div>
         アルキメデスの螺旋<br>
         <svg id="ArchimedesSpiral" class="svg" viewBox="0 0 480 480" width="480" height="480" />
 
-        <div id="Div1">
-            <label for="Slider">BPM</label>
-            <input type="range" name="slider" id="Slider" value="150" min="30" max="400" width="300" />
+        <div>
+            <label for="ArchimedesRotationSlider" class="title-head">Rotation</label>
+            <input type="range" name="slider" id="ArchimedesRotationSlider" value="5" min="2" max="30" step="0.1" />
+            <span id="ArchimedesRotationValue">5</span>
+        </div>
+        <div>
+            <label for="ArchimedesStartAngleSlider" class="title-head">Starting Angle</label>
+            <input type="range" name="slider" id="ArchimedesStartAngleSlider" value="0" min="0" max="360" />
+            <span id="ArchimedesStartAngleValue">5</span>
+        </div>
+        <div>
+            <input type="radio" name="ArchimedesClockwiseRadio" value="1" checked> clockwise
+            <input type="radio" name="ArchimedesClockwiseRadio" value="-1"> anticlockwise
         </div>
     </div>
 </div>
