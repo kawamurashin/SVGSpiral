@@ -1,0 +1,35 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+body {
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#wrapper
+{
+    display: flex;
+    align-items: center;
+    background-color: #533;
+    width: 1920px;
+    height: 1080px;
+    justify-content:space-around;
+}
+
+.svg
+{
+    background-color: #433;
+    width: 480px;
+    height: 480px;
+}
+
+.text{
+    font-weight: bolder;
+    font-size: 38px;
+    color:#FF0000;
+    width: 200px;
+}
