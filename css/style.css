@@ -2,10 +2,11 @@ html, body {
     margin: 0px;
     padding: 0px;
     height: 100%;
+    color: white;
 }
 
 body {
-    background-color: #333;
+    background-color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,7 +15,7 @@ body {
 {
     display: flex;
     align-items: center;
-    background-color: #533;
+    background-color: #111;
     width: 1920px;
     height: 1080px;
     justify-content:space-around;
@@ -22,7 +23,7 @@ body {
 
 .svg
 {
-    background-color: #433;
+    background-color: #333;
     width: 480px;
     height: 480px;
 }

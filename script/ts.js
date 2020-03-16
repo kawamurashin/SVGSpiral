@@ -68,7 +68,6 @@ var View;
                 input.addEventListener("change", change);
                 input.addEventListener("mousemove", mousemove);
                 var checkOption = document.getElementsByName("ArchimedesClockwiseRadio");
-                console.log(checkOption.length);
                 var n = checkOption.length;
                 for (var i = 0; i < n; i++) {
                     var check = checkOption[i];
@@ -96,21 +95,30 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    var Logarithmic;
-    (function (Logarithmic) {
-        var LogarithmicManager = (function () {
-            function LogarithmicManager() {
+    var LogarithmicSpiralManager;
+    (function (LogarithmicSpiralManager_1) {
+        var LogarithmicSpiralManager = (function () {
+            function LogarithmicSpiralManager() {
                 var svg = document.getElementById("LogarithmicSpiral");
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 svg.appendChild(this._polyline);
                 this._polyline.setAttributeNS(null, "stroke", "#FFF");
                 this._polyline.setAttributeNS(null, "stroke-width", "2");
                 this._polyline.setAttributeNS(null, "fill", "none");
+            }
+            LogarithmicSpiralManager.prototype.draw = function () {
+                var svg = document.getElementById("LogarithmicSpiral");
                 var width = Number(svg.getAttribute("width"));
                 var height = Number(svg.getAttribute("height"));
                 var cx = width * 0.5;
                 var cy = height * 0.5;
-                var rotation = 3;
+                var input = document.getElementById("LogarithmicRotationSlider");
+                var rotation = Number(input.value);
+                input = document.getElementById("LogarithmicStartSlider");
+                var startAngle = Number(input.value);
+                var startTheta = startAngle * Math.PI / 180;
+                input = document.querySelector("input:checked[name=LogarithmicClockwiseRadio]");
+                var clockwise = Number(input.value);
                 var a = 1;
                 var b = Math.log((width * 0.5 - 10) / a) / (2 * Math.PI * rotation);
                 var value = cx + "," + cy + " ";
@@ -118,13 +126,62 @@ var View;
                 for (var i = 0; i < n; i++) {
                     var count = i * (Math.PI / 180);
                     var radius = Math.pow(Math.E, b * count);
-                    var theta = i * (Math.PI / 180);
+                    var theta = startTheta + i * (Math.PI / 180) * clockwise;
                     var x = cx + radius * Math.cos(theta);
                     var y = cy + radius * Math.sin(theta);
                     value += x + "," + y + " ";
                 }
                 this._polyline.setAttributeNS(null, "points", value);
+            };
+            return LogarithmicSpiralManager;
+        }());
+        LogarithmicSpiralManager_1.LogarithmicSpiralManager = LogarithmicSpiralManager;
+    })(LogarithmicSpiralManager = View.LogarithmicSpiralManager || (View.LogarithmicSpiralManager = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Logarithmic;
+    (function (Logarithmic) {
+        var LogarithmicSpiralManager = View.LogarithmicSpiralManager.LogarithmicSpiralManager;
+        var LogarithmicManager = (function () {
+            function LogarithmicManager() {
+                var _this = this;
+                var change = function () {
+                    _this.changeHandler();
+                };
+                var mousemove = function () {
+                    _this.mousemoveHandler();
+                };
+                this._spiral = new LogarithmicSpiralManager();
+                this._spiral.draw();
+                this.setInputValue();
+                var input = document.getElementById("LogarithmicRotationSlider");
+                input.addEventListener("change", change);
+                input.addEventListener("mousemove", mousemove);
+                input = document.getElementById("LogarithmicStartSlider");
+                input.addEventListener("change", change);
+                input.addEventListener("mousemove", mousemove);
+                var checkOption = document.getElementsByName("LogarithmicClockwiseRadio");
+                var n = checkOption.length;
+                for (var i = 0; i < n; i++) {
+                    var check = checkOption[i];
+                    check.addEventListener("change", change);
+                }
             }
+            LogarithmicManager.prototype.changeHandler = function () {
+                this.setInputValue();
+                this._spiral.draw();
+            };
+            LogarithmicManager.prototype.mousemoveHandler = function () {
+                this.setInputValue();
+                this._spiral.draw();
+            };
+            LogarithmicManager.prototype.setInputValue = function () {
+                var input = document.getElementById("LogarithmicRotationSlider");
+                document.getElementById("LogarithmicRotationValue").textContent = input.value;
+                input = document.getElementById("LogarithmicStartSlider");
+                document.getElementById("LogarithmicStartAngleValue").textContent = input.value + "°";
+            };
             return LogarithmicManager;
         }());
         Logarithmic.LogarithmicManager = LogarithmicManager;

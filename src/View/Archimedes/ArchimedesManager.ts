@@ -56,7 +56,6 @@ namespace View.Archimedes {
             input.addEventListener("mousemove" , mousemove);
 
             let checkOption = document.getElementsByName("ArchimedesClockwiseRadio");
-            console.log(checkOption.length)
             let n:number = checkOption.length;
             for(let i:number = 0;i<n;i++)
             {
