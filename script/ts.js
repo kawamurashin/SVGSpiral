@@ -7,19 +7,22 @@ var View;
                 var svg = document.getElementById("ArchimedesSpiral");
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 svg.appendChild(this._polyline);
-                this._polyline.setAttributeNS(null, "stroke", "blue");
+                this._polyline.setAttributeNS(null, "stroke", "#FFF");
                 this._polyline.setAttributeNS(null, "stroke-width", "2");
                 this._polyline.setAttributeNS(null, "fill", "none");
                 var width = Number(svg.getAttribute("width"));
                 var height = Number(svg.getAttribute("height"));
                 var cx = width * 0.5;
                 var cy = height * 0.5;
+                var rotation = 3;
+                var radius = ((-10 + width * 0.5) / (2 * Math.PI * rotation));
                 var value = cx + "," + cy + " ";
-                var n = 2000;
+                var n = 360 * rotation;
                 for (var i = 0; i < n; i++) {
-                    var r = i * (Math.PI / 180);
-                    var x = cx + 10 * r * Math.cos(r);
-                    var y = cy + 10 * r * Math.sin(r);
+                    var count = i * (Math.PI / 180);
+                    var theta = i * (Math.PI / 180);
+                    var x = cx + radius * count * Math.cos(theta);
+                    var y = cy + radius * count * Math.sin(theta);
                     value += x + "," + y + " ";
                 }
                 this._polyline.setAttributeNS(null, "points", value);
@@ -38,20 +41,24 @@ var View;
                 var svg = document.getElementById("LogarithmicSpiral");
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 svg.appendChild(this._polyline);
-                this._polyline.setAttributeNS(null, "stroke", "blue");
+                this._polyline.setAttributeNS(null, "stroke", "#FFF");
                 this._polyline.setAttributeNS(null, "stroke-width", "2");
                 this._polyline.setAttributeNS(null, "fill", "none");
                 var width = Number(svg.getAttribute("width"));
                 var height = Number(svg.getAttribute("height"));
                 var cx = width * 0.5;
                 var cy = height * 0.5;
+                var rotation = 3;
+                var a = 1;
+                var b = Math.log((width * 0.5 - 10) / a) / (2 * Math.PI * rotation);
                 var value = cx + "," + cy + " ";
-                var n = 2000;
+                var n = rotation * 360;
                 for (var i = 0; i < n; i++) {
-                    var r = i * (Math.PI / 180);
-                    var radius = Math.pow(Math.E, 0.2 * r);
-                    var x = cx + radius * Math.cos(r);
-                    var y = cy + radius * Math.sin(r);
+                    var count = i * (Math.PI / 180);
+                    var radius = Math.pow(Math.E, b * count);
+                    var theta = i * (Math.PI / 180);
+                    var x = cx + radius * Math.cos(theta);
+                    var y = cy + radius * Math.sin(theta);
                     value += x + "," + y + " ";
                 }
                 this._polyline.setAttributeNS(null, "points", value);
@@ -77,7 +84,6 @@ var View;
 var ViewManager = View.ViewManager;
 var Main = (function () {
     function Main() {
-        console.log(("hoge"));
         var viewManager = new ViewManager();
     }
     return Main;

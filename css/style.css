@@ -27,9 +27,6 @@ body {
     height: 480px;
 }
 
-.text{
-    font-weight: bolder;
-    font-size: 38px;
-    color:#FF0000;
-    width: 200px;
+input[type=range] {
+    width:300px;
 }

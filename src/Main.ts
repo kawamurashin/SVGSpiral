@@ -5,9 +5,7 @@ class Main
 {
     constructor()
     {
-        console.log(("hoge"));
         let viewManager = new ViewManager();
-
     }
 }
 
