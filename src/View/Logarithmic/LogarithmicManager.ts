@@ -1,11 +1,12 @@
 ///<reference path="LogarithmicGraphManager.ts"/>
+///<reference path="../Spiral/SpiralManager.ts"/>
 namespace View.Logarithmic
 {
     import LogarithmicGraphManager = View.LogarithmicSpiralManager.LogarithmicGraphManager;
     import SpiralManager = View.Spiral.SpiralManager;
 
     export class LogarithmicManager extends SpiralManager{
-        private _spiral:LogarithmicGraphManager;
+
         constructor() {
             super();
             const change = () =>
@@ -17,8 +18,8 @@ namespace View.Logarithmic
                 this.mousemoveHandler();
             };
 
-            this._spiral = new LogarithmicGraphManager();
-            this._spiral.draw();
+            this._graph = new LogarithmicGraphManager();
+            this._graph.draw();
             this.setInputValue();
 
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
@@ -37,20 +38,22 @@ namespace View.Logarithmic
                 check.addEventListener("change" , change);
             }
         }
+        /*
         private changeHandler():void
         {
             this.setInputValue();
             //
-            this._spiral.draw();
+            this._graph.draw();
         }
         private mousemoveHandler():void
         {
             this.setInputValue();
             //
-            this._spiral.draw();
-        }
-        private setInputValue():void
+            this._graph.draw();
+        }*/
+        protected setInputValue():void
         {
+            super.setInputValue();
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
             document.getElementById("LogarithmicRotationValue").textContent = input.value;
 

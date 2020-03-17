@@ -18,6 +18,19 @@ var View;
         var GraphManager = (function () {
             function GraphManager() {
             }
+            GraphManager.prototype.init = function () {
+                this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                this._svg.appendChild(this._polyline);
+                this._polyline.setAttributeNS(null, "stroke", "#FFF");
+                this._polyline.setAttributeNS(null, "stroke-width", "2");
+                this._polyline.setAttributeNS(null, "fill", "none");
+                var width = Number(this._svg.getAttribute("width"));
+                var height = Number(this._svg.getAttribute("height"));
+                this._centerX = width * 0.5;
+                this._centerY = height * 0.5;
+            };
+            GraphManager.prototype.draw = function () {
+            };
             return GraphManager;
         }());
         Spiral.GraphManager = GraphManager;
@@ -34,35 +47,27 @@ var View;
                 __extends(ArchimedesGraphManager, _super);
                 function ArchimedesGraphManager() {
                     var _this = _super.call(this) || this;
-                    var svg = document.getElementById("ArchimedesSpiral");
-                    _this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                    svg.appendChild(_this._polyline);
-                    _this._polyline.setAttributeNS(null, "stroke", "#FFF");
-                    _this._polyline.setAttributeNS(null, "stroke-width", "2");
-                    _this._polyline.setAttributeNS(null, "fill", "none");
+                    _this._svg = document.getElementById("ArchimedesSpiral");
+                    _this.init();
                     return _this;
                 }
                 ArchimedesGraphManager.prototype.draw = function () {
-                    var svg = document.getElementById("ArchimedesSpiral");
-                    var width = Number(svg.getAttribute("width"));
-                    var height = Number(svg.getAttribute("height"));
-                    var cx = width * 0.5;
-                    var cy = height * 0.5;
+                    _super.prototype.draw.call(this);
                     var input = document.getElementById("ArchimedesRotationSlider");
                     var rotation = Number(input.value);
-                    var radius = ((-10 + width * 0.5) / (2 * Math.PI * rotation));
+                    var radius = ((-10 + this._centerX) / (2 * Math.PI * rotation));
                     input = document.getElementById("ArchimedesStartAngleSlider");
                     var startAngle = Number(input.value);
                     var startTheta = startAngle * Math.PI / 180;
                     input = document.querySelector("input:checked[name=ArchimedesClockwiseRadio]");
                     var clockwise = Number(input.value);
-                    var value = cx + "," + cy + " ";
+                    var value = this._centerX + "," + this._centerY + " ";
                     var n = 360 * rotation;
                     for (var i = 0; i < n; i++) {
                         var count = i * (Math.PI / 180);
                         var theta = startTheta + i * (Math.PI / 180) * clockwise;
-                        var x = cx + radius * count * Math.cos(theta);
-                        var y = cy + radius * count * Math.sin(theta);
+                        var x = this._centerX + radius * count * Math.cos(theta);
+                        var y = this._centerY + radius * count * Math.sin(theta);
                         value += x + "," + y + " ";
                     }
                     this._polyline.setAttributeNS(null, "points", value);
@@ -80,6 +85,16 @@ var View;
         var SpiralManager = (function () {
             function SpiralManager() {
             }
+            SpiralManager.prototype.changeHandler = function () {
+                this.setInputValue();
+                this._graph.draw();
+            };
+            SpiralManager.prototype.mousemoveHandler = function () {
+                this.setInputValue();
+                this._graph.draw();
+            };
+            SpiralManager.prototype.setInputValue = function () {
+            };
             return SpiralManager;
         }());
         Spiral.SpiralManager = SpiralManager;
@@ -101,8 +116,8 @@ var View;
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
-                _this._spiral = new ArchimedesGraphManager();
-                _this._spiral.draw();
+                _this._graph = new ArchimedesGraphManager();
+                _this._graph.draw();
                 _this.setInputValue();
                 var input = document.getElementById("ArchimedesRotationSlider");
                 input.addEventListener("change", change);
@@ -118,15 +133,8 @@ var View;
                 }
                 return _this;
             }
-            ArchimedesManager.prototype.changeHandler = function () {
-                this.setInputValue();
-                this._spiral.draw();
-            };
-            ArchimedesManager.prototype.mousemoveHandler = function () {
-                this.setInputValue();
-                this._spiral.draw();
-            };
             ArchimedesManager.prototype.setInputValue = function () {
+                _super.prototype.setInputValue.call(this);
                 var input = document.getElementById("ArchimedesRotationSlider");
                 document.getElementById("ArchimedesRotationValue").textContent = input.value;
                 input = document.getElementById("ArchimedesStartAngleSlider");
@@ -146,20 +154,12 @@ var View;
             __extends(LogarithmicGraphManager, _super);
             function LogarithmicGraphManager() {
                 var _this = _super.call(this) || this;
-                var svg = document.getElementById("LogarithmicSpiral");
-                _this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                svg.appendChild(_this._polyline);
-                _this._polyline.setAttributeNS(null, "stroke", "#FFF");
-                _this._polyline.setAttributeNS(null, "stroke-width", "2");
-                _this._polyline.setAttributeNS(null, "fill", "none");
+                _this._svg = document.getElementById("LogarithmicSpiral");
+                _this.init();
                 return _this;
             }
             LogarithmicGraphManager.prototype.draw = function () {
-                var svg = document.getElementById("LogarithmicSpiral");
-                var width = Number(svg.getAttribute("width"));
-                var height = Number(svg.getAttribute("height"));
-                var cx = width * 0.5;
-                var cy = height * 0.5;
+                _super.prototype.draw.call(this);
                 var input = document.getElementById("LogarithmicRotationSlider");
                 var rotation = Number(input.value);
                 input = document.getElementById("LogarithmicStartSlider");
@@ -168,15 +168,15 @@ var View;
                 input = document.querySelector("input:checked[name=LogarithmicClockwiseRadio]");
                 var clockwise = Number(input.value);
                 var a = 1;
-                var b = Math.log((width * 0.5 - 10) / a) / (2 * Math.PI * rotation);
-                var value = cx + "," + cy + " ";
+                var b = Math.log((this._centerY - 10) / a) / (2 * Math.PI * rotation);
+                var value = this._centerX + "," + this._centerY + " ";
                 var n = rotation * 360;
                 for (var i = 0; i < n; i++) {
                     var count = i * (Math.PI / 180);
                     var radius = Math.pow(Math.E, b * count);
                     var theta = startTheta + i * (Math.PI / 180) * clockwise;
-                    var x = cx + radius * Math.cos(theta);
-                    var y = cy + radius * Math.sin(theta);
+                    var x = this._centerX + radius * Math.cos(theta);
+                    var y = this._centerY + radius * Math.sin(theta);
                     value += x + "," + y + " ";
                 }
                 this._polyline.setAttributeNS(null, "points", value);
@@ -202,8 +202,8 @@ var View;
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
-                _this._spiral = new LogarithmicGraphManager();
-                _this._spiral.draw();
+                _this._graph = new LogarithmicGraphManager();
+                _this._graph.draw();
                 _this.setInputValue();
                 var input = document.getElementById("LogarithmicRotationSlider");
                 input.addEventListener("change", change);
@@ -219,15 +219,8 @@ var View;
                 }
                 return _this;
             }
-            LogarithmicManager.prototype.changeHandler = function () {
-                this.setInputValue();
-                this._spiral.draw();
-            };
-            LogarithmicManager.prototype.mousemoveHandler = function () {
-                this.setInputValue();
-                this._spiral.draw();
-            };
             LogarithmicManager.prototype.setInputValue = function () {
+                _super.prototype.setInputValue.call(this);
                 var input = document.getElementById("LogarithmicRotationSlider");
                 document.getElementById("LogarithmicRotationValue").textContent = input.value;
                 input = document.getElementById("LogarithmicStartSlider");

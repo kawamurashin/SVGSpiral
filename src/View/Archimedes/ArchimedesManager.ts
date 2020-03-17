@@ -4,7 +4,7 @@ namespace View.Archimedes {
     import ArchimedesGraphManager = View.Archimedes.Spiral.ArchimedesGraphManager;
     import SpiralManager = View.Spiral.SpiralManager;
     export class ArchimedesManager extends SpiralManager{
-        private readonly _spiral:ArchimedesGraphManager;
+        //private readonly _spiral:ArchimedesGraphManager;
         constructor() {
             super();
             const change = () =>
@@ -15,8 +15,8 @@ namespace View.Archimedes {
             {
                 this.mousemoveHandler();
             };
-            this._spiral = new ArchimedesGraphManager();
-            this._spiral.draw();
+            this._graph = new ArchimedesGraphManager();
+            this._graph.draw();
             this.setInputValue();
 
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("ArchimedesRotationSlider");
@@ -35,7 +35,7 @@ namespace View.Archimedes {
                 check.addEventListener("change" , change);
             }
         }
-
+        /*
         private changeHandler():void
         {
             this.setInputValue();
@@ -47,9 +47,10 @@ namespace View.Archimedes {
             this.setInputValue();
             //
             this._spiral.draw();
-        }
-        private setInputValue():void
+        }*/
+        protected setInputValue():void
         {
+            super.setInputValue();
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("ArchimedesRotationSlider");
             document.getElementById("ArchimedesRotationValue").textContent = input.value;
 
