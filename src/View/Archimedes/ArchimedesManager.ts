@@ -1,9 +1,12 @@
-///<reference path="Spiral/ArchimedesSpiralManager.ts"/>
+///<reference path="ArchimedesGraphManager.ts"/>
+///<reference path="../Spiral/SpiralManager.ts"/>
 namespace View.Archimedes {
-    import ArchimedesSpiralManager = View.Archimedes.Spiral.ArchimedesSpiralManager;
-    export class ArchimedesManager {
-        private readonly _spiral:ArchimedesSpiralManager;
+    import ArchimedesGraphManager = View.Archimedes.Spiral.ArchimedesGraphManager;
+    import SpiralManager = View.Spiral.SpiralManager;
+    export class ArchimedesManager extends SpiralManager{
+        private readonly _spiral:ArchimedesGraphManager;
         constructor() {
+            super();
             const change = () =>
             {
                 this.changeHandler();
@@ -12,7 +15,7 @@ namespace View.Archimedes {
             {
                 this.mousemoveHandler();
             };
-            this._spiral = new ArchimedesSpiralManager();
+            this._spiral = new ArchimedesGraphManager();
             this._spiral.draw();
             this.setInputValue();
 

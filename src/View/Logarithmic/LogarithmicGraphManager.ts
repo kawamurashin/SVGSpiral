@@ -1,8 +1,11 @@
 namespace View.LogarithmicSpiralManager
 {
-    export class LogarithmicSpiralManager {
+    import GraphManager = View.Spiral.GraphManager;
+
+    export class LogarithmicGraphManager extends GraphManager {
         private readonly _polyline;
         constructor() {
+            super();
             const svg = document.getElementById("LogarithmicSpiral");
             this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
             svg.appendChild(this._polyline);

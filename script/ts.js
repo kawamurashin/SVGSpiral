@@ -1,19 +1,48 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var View;
+(function (View) {
+    var Spiral;
+    (function (Spiral) {
+        var GraphManager = (function () {
+            function GraphManager() {
+            }
+            return GraphManager;
+        }());
+        Spiral.GraphManager = GraphManager;
+    })(Spiral = View.Spiral || (View.Spiral = {}));
+})(View || (View = {}));
 var View;
 (function (View) {
     var Archimedes;
     (function (Archimedes) {
         var Spiral;
         (function (Spiral) {
-            var ArchimedesSpiralManager = (function () {
-                function ArchimedesSpiralManager() {
+            var GraphManager = View.Spiral.GraphManager;
+            var ArchimedesGraphManager = (function (_super) {
+                __extends(ArchimedesGraphManager, _super);
+                function ArchimedesGraphManager() {
+                    var _this = _super.call(this) || this;
                     var svg = document.getElementById("ArchimedesSpiral");
-                    this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                    svg.appendChild(this._polyline);
-                    this._polyline.setAttributeNS(null, "stroke", "#FFF");
-                    this._polyline.setAttributeNS(null, "stroke-width", "2");
-                    this._polyline.setAttributeNS(null, "fill", "none");
+                    _this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                    svg.appendChild(_this._polyline);
+                    _this._polyline.setAttributeNS(null, "stroke", "#FFF");
+                    _this._polyline.setAttributeNS(null, "stroke-width", "2");
+                    _this._polyline.setAttributeNS(null, "fill", "none");
+                    return _this;
                 }
-                ArchimedesSpiralManager.prototype.draw = function () {
+                ArchimedesGraphManager.prototype.draw = function () {
                     var svg = document.getElementById("ArchimedesSpiral");
                     var width = Number(svg.getAttribute("width"));
                     var height = Number(svg.getAttribute("height"));
@@ -38,29 +67,43 @@ var View;
                     }
                     this._polyline.setAttributeNS(null, "points", value);
                 };
-                return ArchimedesSpiralManager;
-            }());
-            Spiral.ArchimedesSpiralManager = ArchimedesSpiralManager;
+                return ArchimedesGraphManager;
+            }(GraphManager));
+            Spiral.ArchimedesGraphManager = ArchimedesGraphManager;
         })(Spiral = Archimedes.Spiral || (Archimedes.Spiral = {}));
     })(Archimedes = View.Archimedes || (View.Archimedes = {}));
 })(View || (View = {}));
 var View;
 (function (View) {
+    var Spiral;
+    (function (Spiral) {
+        var SpiralManager = (function () {
+            function SpiralManager() {
+            }
+            return SpiralManager;
+        }());
+        Spiral.SpiralManager = SpiralManager;
+    })(Spiral = View.Spiral || (View.Spiral = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
     var Archimedes;
     (function (Archimedes) {
-        var ArchimedesSpiralManager = View.Archimedes.Spiral.ArchimedesSpiralManager;
-        var ArchimedesManager = (function () {
+        var ArchimedesGraphManager = View.Archimedes.Spiral.ArchimedesGraphManager;
+        var SpiralManager = View.Spiral.SpiralManager;
+        var ArchimedesManager = (function (_super) {
+            __extends(ArchimedesManager, _super);
             function ArchimedesManager() {
-                var _this = this;
+                var _this = _super.call(this) || this;
                 var change = function () {
                     _this.changeHandler();
                 };
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
-                this._spiral = new ArchimedesSpiralManager();
-                this._spiral.draw();
-                this.setInputValue();
+                _this._spiral = new ArchimedesGraphManager();
+                _this._spiral.draw();
+                _this.setInputValue();
                 var input = document.getElementById("ArchimedesRotationSlider");
                 input.addEventListener("change", change);
                 input.addEventListener("mousemove", mousemove);
@@ -73,6 +116,7 @@ var View;
                     var check = checkOption[i];
                     check.addEventListener("change", change);
                 }
+                return _this;
             }
             ArchimedesManager.prototype.changeHandler = function () {
                 this.setInputValue();
@@ -89,24 +133,28 @@ var View;
                 document.getElementById("ArchimedesStartAngleValue").textContent = input.value + "°";
             };
             return ArchimedesManager;
-        }());
+        }(SpiralManager));
         Archimedes.ArchimedesManager = ArchimedesManager;
     })(Archimedes = View.Archimedes || (View.Archimedes = {}));
 })(View || (View = {}));
 var View;
 (function (View) {
     var LogarithmicSpiralManager;
-    (function (LogarithmicSpiralManager_1) {
-        var LogarithmicSpiralManager = (function () {
-            function LogarithmicSpiralManager() {
+    (function (LogarithmicSpiralManager) {
+        var GraphManager = View.Spiral.GraphManager;
+        var LogarithmicGraphManager = (function (_super) {
+            __extends(LogarithmicGraphManager, _super);
+            function LogarithmicGraphManager() {
+                var _this = _super.call(this) || this;
                 var svg = document.getElementById("LogarithmicSpiral");
-                this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                svg.appendChild(this._polyline);
-                this._polyline.setAttributeNS(null, "stroke", "#FFF");
-                this._polyline.setAttributeNS(null, "stroke-width", "2");
-                this._polyline.setAttributeNS(null, "fill", "none");
+                _this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                svg.appendChild(_this._polyline);
+                _this._polyline.setAttributeNS(null, "stroke", "#FFF");
+                _this._polyline.setAttributeNS(null, "stroke-width", "2");
+                _this._polyline.setAttributeNS(null, "fill", "none");
+                return _this;
             }
-            LogarithmicSpiralManager.prototype.draw = function () {
+            LogarithmicGraphManager.prototype.draw = function () {
                 var svg = document.getElementById("LogarithmicSpiral");
                 var width = Number(svg.getAttribute("width"));
                 var height = Number(svg.getAttribute("height"));
@@ -133,28 +181,30 @@ var View;
                 }
                 this._polyline.setAttributeNS(null, "points", value);
             };
-            return LogarithmicSpiralManager;
-        }());
-        LogarithmicSpiralManager_1.LogarithmicSpiralManager = LogarithmicSpiralManager;
+            return LogarithmicGraphManager;
+        }(GraphManager));
+        LogarithmicSpiralManager.LogarithmicGraphManager = LogarithmicGraphManager;
     })(LogarithmicSpiralManager = View.LogarithmicSpiralManager || (View.LogarithmicSpiralManager = {}));
 })(View || (View = {}));
 var View;
 (function (View) {
     var Logarithmic;
     (function (Logarithmic) {
-        var LogarithmicSpiralManager = View.LogarithmicSpiralManager.LogarithmicSpiralManager;
-        var LogarithmicManager = (function () {
+        var LogarithmicGraphManager = View.LogarithmicSpiralManager.LogarithmicGraphManager;
+        var SpiralManager = View.Spiral.SpiralManager;
+        var LogarithmicManager = (function (_super) {
+            __extends(LogarithmicManager, _super);
             function LogarithmicManager() {
-                var _this = this;
+                var _this = _super.call(this) || this;
                 var change = function () {
                     _this.changeHandler();
                 };
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
-                this._spiral = new LogarithmicSpiralManager();
-                this._spiral.draw();
-                this.setInputValue();
+                _this._spiral = new LogarithmicGraphManager();
+                _this._spiral.draw();
+                _this.setInputValue();
                 var input = document.getElementById("LogarithmicRotationSlider");
                 input.addEventListener("change", change);
                 input.addEventListener("mousemove", mousemove);
@@ -167,6 +217,7 @@ var View;
                     var check = checkOption[i];
                     check.addEventListener("change", change);
                 }
+                return _this;
             }
             LogarithmicManager.prototype.changeHandler = function () {
                 this.setInputValue();
@@ -183,7 +234,7 @@ var View;
                 document.getElementById("LogarithmicStartAngleValue").textContent = input.value + "°";
             };
             return LogarithmicManager;
-        }());
+        }(SpiralManager));
         Logarithmic.LogarithmicManager = LogarithmicManager;
     })(Logarithmic = View.Logarithmic || (View.Logarithmic = {}));
 })(View || (View = {}));

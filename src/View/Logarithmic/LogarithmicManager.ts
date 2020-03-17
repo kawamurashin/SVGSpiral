@@ -1,10 +1,13 @@
-///<reference path="Spiral/LogarithmicSpiralManager.ts"/>
+///<reference path="LogarithmicGraphManager.ts"/>
 namespace View.Logarithmic
 {
-    import LogarithmicSpiralManager = View.LogarithmicSpiralManager.LogarithmicSpiralManager;
-    export class LogarithmicManager {
-        private _spiral:LogarithmicSpiralManager;
+    import LogarithmicGraphManager = View.LogarithmicSpiralManager.LogarithmicGraphManager;
+    import SpiralManager = View.Spiral.SpiralManager;
+
+    export class LogarithmicManager extends SpiralManager{
+        private _spiral:LogarithmicGraphManager;
         constructor() {
+            super();
             const change = () =>
             {
                 this.changeHandler();
@@ -14,7 +17,7 @@ namespace View.Logarithmic
                 this.mousemoveHandler();
             };
 
-            this._spiral = new LogarithmicSpiralManager();
+            this._spiral = new LogarithmicGraphManager();
             this._spiral.draw();
             this.setInputValue();
 
