@@ -13,12 +13,32 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var View;
 (function (View) {
+    var Geom;
+    (function (Geom) {
+        var Vector2 = (function () {
+            function Vector2() {
+            }
+            return Vector2;
+        }());
+        Geom.Vector2 = Vector2;
+    })(Geom = View.Geom || (View.Geom = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
     var Spiral;
     (function (Spiral) {
         var GraphManager = (function () {
             function GraphManager() {
             }
+            Object.defineProperty(GraphManager.prototype, "pointList", {
+                get: function () {
+                    return this._pointList;
+                },
+                enumerable: true,
+                configurable: true
+            });
             GraphManager.prototype.init = function () {
+                var _this = this;
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 this._svg.appendChild(this._polyline);
                 this._polyline.setAttributeNS(null, "stroke", "#FFF");
@@ -28,7 +48,12 @@ var View;
                 var height = Number(this._svg.getAttribute("height"));
                 this._centerX = width * 0.5;
                 this._centerY = height * 0.5;
-                this.draw();
+                var click = function () {
+                    _this.clickHandler();
+                };
+                this._svg.addEventListener("click", click);
+            };
+            GraphManager.prototype.clickHandler = function () {
             };
             GraphManager.prototype.draw = function () {
             };
@@ -44,6 +69,7 @@ var View;
         var Spiral;
         (function (Spiral) {
             var GraphManager = View.Spiral.GraphManager;
+            var Vector2 = View.Geom.Vector2;
             var ArchimedesGraphManager = (function (_super) {
                 __extends(ArchimedesGraphManager, _super);
                 function ArchimedesGraphManager() {
@@ -54,6 +80,7 @@ var View;
                 }
                 ArchimedesGraphManager.prototype.draw = function () {
                     _super.prototype.draw.call(this);
+                    this._pointList = [];
                     var input = document.getElementById("ArchimedesRotationSlider");
                     var rotation = Number(input.value);
                     var a = ((-10 + this._centerX) / (2 * Math.PI * rotation));
@@ -68,9 +95,11 @@ var View;
                         var theta = i * (Math.PI / 180);
                         var radius = a * theta;
                         var rad = startTheta + i * (Math.PI / 180) * clockwise;
-                        var x = this._centerX + radius * Math.cos(rad);
-                        var y = this._centerY + radius * Math.sin(rad);
-                        value += x + "," + y + " ";
+                        var vector2 = new Vector2();
+                        vector2.x = this._centerX + radius * Math.cos(rad);
+                        vector2.y = this._centerY + radius * Math.sin(rad);
+                        value += vector2.x + "," + vector2.y + " ";
+                        this._pointList.push(vector2);
                     }
                     this._polyline.setAttributeNS(null, "points", value);
                 };
@@ -79,6 +108,31 @@ var View;
             Spiral.ArchimedesGraphManager = ArchimedesGraphManager;
         })(Spiral = Archimedes.Spiral || (Archimedes.Spiral = {}));
     })(Archimedes = View.Archimedes || (View.Archimedes = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Spiral;
+    (function (Spiral) {
+        var BallManager = (function () {
+            function BallManager(layer) {
+                this._layer = layer;
+            }
+            BallManager.prototype.start = function () {
+                console.log(this._pointList.length * Math.random());
+                var vector2 = this._pointList[this._pointList.length * Math.random()];
+                var ball = new Spiral.BallObject(this._layer);
+                ball.x = vector2.x;
+                ball.y = vector2.y;
+            };
+            BallManager.prototype.enterFrame = function () {
+            };
+            BallManager.prototype.setPointList = function (pointList) {
+                this._pointList = pointList;
+            };
+            return BallManager;
+        }());
+        Spiral.BallManager = BallManager;
+    })(Spiral = View.Spiral || (View.Spiral = {}));
 })(View || (View = {}));
 var View;
 (function (View) {
@@ -98,7 +152,7 @@ var View;
                 var element = document.createElement('div');
                 var wrapper = document.getElementById("wrapper");
                 wrapper.appendChild(element);
-                element.innerHTML = "Logarithmic Spiral<br>";
+                element.innerHTML = this._name + "<br>";
                 var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                 svg.setAttribute("id", this._svgKey);
                 svg.setAttribute("class", "svg");
@@ -168,19 +222,35 @@ var View;
                     var check = this._clockwiseList[i];
                     check.addEventListener("change", change);
                 }
+                var click = function () {
+                    _this.screenClickHandler();
+                };
+                svg.addEventListener("click", click);
+                var layer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                svg.appendChild(layer);
+                this._ballManager = new Spiral.BallManager(layer);
+            };
+            SpiralManager.prototype.enterFrame = function () {
+                this._ballManager.enterFrame();
+            };
+            SpiralManager.prototype.draw = function () {
                 this.setInputValue();
+                this._graph.draw();
+                var pointList = this._graph.pointList;
+                this._ballManager.setPointList(pointList);
             };
             SpiralManager.prototype.changeHandler = function () {
-                this.setInputValue();
-                this._graph.draw();
+                this.draw();
             };
             SpiralManager.prototype.mousemoveHandler = function () {
-                this.setInputValue();
-                this._graph.draw();
+                this.draw();
             };
             SpiralManager.prototype.setInputValue = function () {
                 this._rotationValue.textContent = this._rotationInput.value;
                 this._startAngleValue.textContent = this._startAngleInput.value + "°";
+            };
+            SpiralManager.prototype.screenClickHandler = function () {
+                this._ballManager.start();
             };
             return SpiralManager;
         }());
@@ -197,6 +267,7 @@ var View;
             __extends(ArchimedesManager, _super);
             function ArchimedesManager() {
                 var _this = _super.call(this) || this;
+                _this._name = "Archimedes' spiral";
                 _this._svgKey = "ArchimedesSpiral";
                 _this._rotationSliderKey = "ArchimedesRotationSlider";
                 _this._rotationValueKey = "ArchimedesRotationValue";
@@ -205,6 +276,7 @@ var View;
                 _this._radioKey = "ArchimedesClockwiseRadio";
                 _this.init();
                 _this._graph = new ArchimedesGraphManager();
+                _this.draw();
                 return _this;
             }
             return ArchimedesManager;
@@ -217,6 +289,7 @@ var View;
     var LogarithmicSpiralManager;
     (function (LogarithmicSpiralManager) {
         var GraphManager = View.Spiral.GraphManager;
+        var Vector2 = View.Geom.Vector2;
         var LogarithmicGraphManager = (function (_super) {
             __extends(LogarithmicGraphManager, _super);
             function LogarithmicGraphManager() {
@@ -227,6 +300,7 @@ var View;
             }
             LogarithmicGraphManager.prototype.draw = function () {
                 _super.prototype.draw.call(this);
+                this._pointList = [];
                 var input = document.getElementById("LogarithmicRotationSlider");
                 var rotation = Number(input.value);
                 input = document.getElementById("LogarithmicStartAngleSlider");
@@ -242,9 +316,11 @@ var View;
                     var count = i * (Math.PI / 180);
                     var radius = Math.pow(Math.E, b * count);
                     var theta = startTheta + i * (Math.PI / 180) * clockwise;
-                    var x = this._centerX + radius * Math.cos(theta);
-                    var y = this._centerY + radius * Math.sin(theta);
-                    value += x + "," + y + " ";
+                    var vector2 = new Vector2();
+                    vector2.x = this._centerX + radius * Math.cos(theta);
+                    vector2.y = this._centerY + radius * Math.sin(theta);
+                    value += vector2.x + "," + vector2.y + " ";
+                    this._pointList.push(vector2);
                 }
                 this._polyline.setAttributeNS(null, "points", value);
             };
@@ -263,6 +339,7 @@ var View;
             __extends(LogarithmicManager, _super);
             function LogarithmicManager() {
                 var _this = _super.call(this) || this;
+                _this._name = "Logarithmic Spiral";
                 _this._svgKey = "LogarithmicSpiral";
                 _this._rotationSliderKey = "LogarithmicRotationSlider";
                 _this._rotationValueKey = "LogarithmicRotationValue";
@@ -271,6 +348,7 @@ var View;
                 _this._radioKey = "LogarithmicClockwiseRadio";
                 _this.init();
                 _this._graph = new LogarithmicGraphManager();
+                _this.draw();
                 return _this;
             }
             return LogarithmicManager;
@@ -283,6 +361,7 @@ var View;
     var Lituus;
     (function (Lituus) {
         var GraphManager = View.Spiral.GraphManager;
+        var Vector2 = View.Geom.Vector2;
         var LituusGraphManager = (function (_super) {
             __extends(LituusGraphManager, _super);
             function LituusGraphManager() {
@@ -293,6 +372,7 @@ var View;
             }
             LituusGraphManager.prototype.draw = function () {
                 _super.prototype.draw.call(this);
+                this._pointList = [];
                 var input = document.getElementById("LituusRotationSlider");
                 var rotation = Number(input.value);
                 var a = 50 * ((-10 + this._centerX) / (2 * Math.PI * rotation));
@@ -307,9 +387,11 @@ var View;
                     var theta = i * (Math.PI / 180);
                     var radius = a / theta;
                     var rad = startTheta + i * (Math.PI / 180) * clockwise;
-                    var x = this._centerX + radius * Math.cos(rad);
-                    var y = this._centerY + radius * Math.sin(rad);
-                    value += x + "," + y + " ";
+                    var vector2 = new Vector2();
+                    vector2.x = this._centerX + radius * Math.cos(rad);
+                    vector2.y = this._centerY + radius * Math.sin(rad);
+                    value += vector2.x + "," + vector2.y + " ";
+                    this._pointList.push(vector2);
                 }
                 this._polyline.setAttributeNS(null, "points", value);
             };
@@ -327,6 +409,7 @@ var View;
             __extends(LituusManager, _super);
             function LituusManager() {
                 var _this = _super.call(this) || this;
+                _this._name = "Lituus";
                 _this._svgKey = "Lituus";
                 _this._rotationSliderKey = "LituusRotationSlider";
                 _this._rotationValueKey = "LituusRotationValue";
@@ -335,6 +418,7 @@ var View;
                 _this._radioKey = "LituusClockwiseRadio";
                 _this.init();
                 _this._graph = new Lituus.LituusGraphManager();
+                _this.draw();
                 return _this;
             }
             return LituusManager;
@@ -349,10 +433,28 @@ var View;
     var LituusManager = View.Lituus.LituusManager;
     var ViewManager = (function () {
         function ViewManager() {
+            this._sprilManagerList = [];
             var archimedesManager = new ArchimedesManager();
+            this._sprilManagerList.push(archimedesManager);
             var logarithmicManager = new LogarithmicManager();
+            this._sprilManagerList.push(logarithmicManager);
             var lituusManager = new LituusManager();
+            this._sprilManagerList.push(lituusManager);
+            this.timeoutHandler();
         }
+        ViewManager.prototype.timeoutHandler = function () {
+            var _this = this;
+            var timeout = function () {
+                _this.timeoutHandler();
+            };
+            var n = this._sprilManagerList.length;
+            for (var i = 0; i < n; i++) {
+                var spiralManager = this._sprilManagerList[i];
+                spiralManager.enterFrame();
+            }
+            var fps = 1000 / 60;
+            setTimeout(timeout, fps);
+        };
         return ViewManager;
     }());
     View.ViewManager = ViewManager;
@@ -369,14 +471,38 @@ window.addEventListener("load", function () {
 });
 var View;
 (function (View) {
-    var Geom;
-    (function (Geom) {
-        var Vector2 = (function () {
-            function Vector2() {
+    var Spiral;
+    (function (Spiral) {
+        var BallObject = (function () {
+            function BallObject(layer) {
+                this.count = 0;
+                this._x = 0;
+                this._y = 0;
+                this._layer = layer;
+                this._circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                this._circle.r.baseVal.value = 3;
+                this._circle.style.setProperty("fill", "#fff");
+                this._layer.appendChild(this._circle);
             }
-            return Vector2;
+            Object.defineProperty(BallObject.prototype, "x", {
+                set: function (value) {
+                    this._x = value;
+                    this._circle.cx.baseVal.value = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(BallObject.prototype, "y", {
+                set: function (value) {
+                    this._y = value;
+                    this._circle.cy.baseVal.value = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return BallObject;
         }());
-        Geom.Vector2 = Vector2;
-    })(Geom = View.Geom || (View.Geom = {}));
+        Spiral.BallObject = BallObject;
+    })(Spiral = View.Spiral || (View.Spiral = {}));
 })(View || (View = {}));
 //# sourceMappingURL=ts.js.map

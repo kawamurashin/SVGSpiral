@@ -5,6 +5,7 @@ namespace View.Lituus
     export class LituusManager extends SpiralManager{
         constructor() {
             super();
+            this._name = "Lituus";
             this._svgKey = "Lituus";
             this._rotationSliderKey = "LituusRotationSlider";
             this._rotationValueKey = "LituusRotationValue";
@@ -13,6 +14,8 @@ namespace View.Lituus
             this._radioKey = "LituusClockwiseRadio";
             this.init();
             this._graph = new LituusGraphManager();
+            //
+            this.draw();
         }
     }
 }

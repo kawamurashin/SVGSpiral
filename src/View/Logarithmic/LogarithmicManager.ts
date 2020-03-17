@@ -8,6 +8,7 @@ namespace View.Logarithmic
 
         constructor() {
             super();
+            this._name = "Logarithmic Spiral";
             this._svgKey = "LogarithmicSpiral";
             this._rotationSliderKey = "LogarithmicRotationSlider";
             this._rotationValueKey = "LogarithmicRotationValue";
@@ -16,6 +17,8 @@ namespace View.Logarithmic
             this._radioKey = "LogarithmicClockwiseRadio";
             this.init();
             this._graph = new LogarithmicGraphManager();
+            //
+            this.draw();
         }
     }
 }

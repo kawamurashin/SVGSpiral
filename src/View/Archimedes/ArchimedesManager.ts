@@ -6,6 +6,7 @@ namespace View.Archimedes {
     export class ArchimedesManager extends SpiralManager{
         constructor() {
             super();
+            this._name = "Archimedes' spiral";
             this._svgKey = "ArchimedesSpiral";
             this._rotationSliderKey = "ArchimedesRotationSlider";
             this._rotationValueKey = "ArchimedesRotationValue";
@@ -14,6 +15,8 @@ namespace View.Archimedes {
             this._radioKey = "ArchimedesClockwiseRadio";
             this.init();
             this._graph = new ArchimedesGraphManager();
+            //
+            this.draw();
         }
     }
 }

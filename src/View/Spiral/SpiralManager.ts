@@ -1,6 +1,10 @@
+///<reference path="BallManager.ts"/>
 namespace View.Spiral
 {
+    import Vector2 = View.Geom.Vector2;
+
     export class SpiralManager {
+        protected _name:string;
         protected _svgKey:string;
         protected _rotationSliderKey:string;
         protected _rotationValueKey:string;
@@ -15,6 +19,8 @@ namespace View.Spiral
         private _clockwiseList:NodeList;
         private _rotationValue:HTMLElement;
         private _startAngleValue:HTMLElement;
+        //
+        private _ballManager:BallManager;
         constructor() {
 
         }
@@ -31,7 +37,7 @@ namespace View.Spiral
             let element = document.createElement('div');
             let wrapper = document.getElementById("wrapper");
             wrapper.appendChild(element);
-            element.innerHTML = "Logarithmic Spiral<br>"
+            element.innerHTML = this._name + "<br>"
 
             let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("id", this._svgKey);
@@ -105,8 +111,6 @@ namespace View.Spiral
             let radioElement:HTMLInputElement = <HTMLInputElement>this._clockwiseList[0];
             radioElement.checked  = true;
 
-
-
             this._rotationInput.addEventListener("change" , change);
             this._rotationInput.addEventListener("mousemove" , mousemove);
 
@@ -120,24 +124,49 @@ namespace View.Spiral
                 check.addEventListener("change" , change);
             }
 
-            this.setInputValue();
+            const click = () =>
+            {
+                this.screenClickHandler();
+            };
+            svg.addEventListener("click" , click);
+
+            let layer:SVGElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+            svg.appendChild(layer);
+
+            this._ballManager = new BallManager(layer);
+
         }
-        protected changeHandler():void
+        public enterFrame():void
+        {
+            this._ballManager.enterFrame();
+        }
+
+        protected draw():void
         {
             this.setInputValue();
             //
             this._graph.draw();
+            let pointList:Vector2[] = this._graph.pointList;
+
+            this._ballManager.setPointList(pointList);
         }
-        protected mousemoveHandler():void
+        private changeHandler():void
         {
-            this.setInputValue();
-            //
-            this._graph.draw();
+            this.draw();
         }
-        protected setInputValue():void
+        private mousemoveHandler():void
+        {
+            this.draw();
+        }
+        private setInputValue():void
         {
             this._rotationValue.textContent = this._rotationInput.value;
             this._startAngleValue.textContent = this._startAngleInput.value + "°";
+        }
+
+        private screenClickHandler():void
+        {
+            this._ballManager.start()
         }
     }
 }

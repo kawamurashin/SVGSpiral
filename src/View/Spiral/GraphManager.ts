@@ -1,10 +1,19 @@
+///<reference path="../Geom/Vector2.ts"/>
 namespace View.Spiral
 {
+    import Vector2 = View.Geom.Vector2;
+
     export class GraphManager {
+        get pointList(): View.Geom.Vector2[] {
+            return this._pointList;
+        }
         protected _polyline;
         protected _svg;
         protected _centerX:number;
         protected _centerY:number;
+        protected _pointList:Vector2[];
+        //
+        protected _name:string;
         constructor() {
 
         }
@@ -19,7 +28,17 @@ namespace View.Spiral
             let height: number = Number(this._svg.getAttribute("height"));
             this._centerX = width * 0.5;
             this._centerY = height * 0.5;
-            this.draw();
+            const click = () =>
+            {
+                this.clickHandler();
+            }
+
+            this._svg.addEventListener("click",click);
+        }
+        private clickHandler():void
+        {
+
+
         }
 
         public draw()
