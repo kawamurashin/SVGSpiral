@@ -55,7 +55,7 @@ var View;
                     _super.prototype.draw.call(this);
                     var input = document.getElementById("ArchimedesRotationSlider");
                     var rotation = Number(input.value);
-                    var radius = ((-10 + this._centerX) / (2 * Math.PI * rotation));
+                    var a = ((-10 + this._centerX) / (2 * Math.PI * rotation));
                     input = document.getElementById("ArchimedesStartAngleSlider");
                     var startAngle = Number(input.value);
                     var startTheta = startAngle * Math.PI / 180;
@@ -64,10 +64,11 @@ var View;
                     var value = this._centerX + "," + this._centerY + " ";
                     var n = 360 * rotation;
                     for (var i = 0; i < n; i++) {
-                        var count = i * (Math.PI / 180);
-                        var theta = startTheta + i * (Math.PI / 180) * clockwise;
-                        var x = this._centerX + radius * count * Math.cos(theta);
-                        var y = this._centerY + radius * count * Math.sin(theta);
+                        var theta = i * (Math.PI / 180);
+                        var radius = a * theta;
+                        var rad = startTheta + i * (Math.PI / 180) * clockwise;
+                        var x = this._centerX + radius * Math.cos(rad);
+                        var y = this._centerY + radius * Math.sin(rad);
                         value += x + "," + y + " ";
                     }
                     this._polyline.setAttributeNS(null, "points", value);
@@ -162,7 +163,7 @@ var View;
                 _super.prototype.draw.call(this);
                 var input = document.getElementById("LogarithmicRotationSlider");
                 var rotation = Number(input.value);
-                input = document.getElementById("LogarithmicStartSlider");
+                input = document.getElementById("LogarithmicStartAngleSlider");
                 var startAngle = Number(input.value);
                 var startTheta = startAngle * Math.PI / 180;
                 input = document.querySelector("input:checked[name=LogarithmicClockwiseRadio]");
@@ -205,12 +206,14 @@ var View;
                 _this._graph = new LogarithmicGraphManager();
                 _this._graph.draw();
                 _this.setInputValue();
-                var input = document.getElementById("LogarithmicRotationSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
-                input = document.getElementById("LogarithmicStartSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
+                var rotationInput;
+                var startAngleInput;
+                rotationInput = document.getElementById("LogarithmicRotationSlider");
+                rotationInput.addEventListener("change", change);
+                rotationInput.addEventListener("mousemove", mousemove);
+                startAngleInput = document.getElementById("LogarithmicStartAngleSlider");
+                startAngleInput.addEventListener("change", change);
+                startAngleInput.addEventListener("mousemove", mousemove);
                 var checkOption = document.getElementsByName("LogarithmicClockwiseRadio");
                 var n = checkOption.length;
                 for (var i = 0; i < n; i++) {
@@ -223,7 +226,7 @@ var View;
                 _super.prototype.setInputValue.call(this);
                 var input = document.getElementById("LogarithmicRotationSlider");
                 document.getElementById("LogarithmicRotationValue").textContent = input.value;
-                input = document.getElementById("LogarithmicStartSlider");
+                input = document.getElementById("LogarithmicStartAngleSlider");
                 document.getElementById("LogarithmicStartAngleValue").textContent = input.value + "°";
             };
             return LogarithmicManager;
@@ -233,12 +236,98 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
+    var Lituus;
+    (function (Lituus) {
+        var GraphManager = View.Spiral.GraphManager;
+        var LituusGraphManager = (function (_super) {
+            __extends(LituusGraphManager, _super);
+            function LituusGraphManager() {
+                var _this = _super.call(this) || this;
+                _this._svg = document.getElementById("Lituus");
+                _this.init();
+                return _this;
+            }
+            LituusGraphManager.prototype.draw = function () {
+                _super.prototype.draw.call(this);
+                var input = document.getElementById("LituusRotationSlider");
+                var rotation = Number(input.value);
+                var a = 50 * ((-10 + this._centerX) / (2 * Math.PI * rotation));
+                input = document.getElementById("LituusStartAngleSlider");
+                var startAngle = Number(input.value);
+                var startTheta = startAngle * Math.PI / 180;
+                input = document.querySelector("input:checked[name=LituusClockwiseRadio]");
+                var clockwise = Number(input.value);
+                var value = "";
+                var n = rotation * 360;
+                for (var i = 1; i < n; i++) {
+                    var theta = i * (Math.PI / 180);
+                    var radius = a / theta;
+                    var rad = startTheta + i * (Math.PI / 180) * clockwise;
+                    var x = this._centerX + radius * Math.cos(rad);
+                    var y = this._centerY + radius * Math.sin(rad);
+                    value += x + "," + y + " ";
+                }
+                this._polyline.setAttributeNS(null, "points", value);
+            };
+            return LituusGraphManager;
+        }(GraphManager));
+        Lituus.LituusGraphManager = LituusGraphManager;
+    })(Lituus = View.Lituus || (View.Lituus = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
+    var Lituus;
+    (function (Lituus) {
+        var SpiralManager = View.Spiral.SpiralManager;
+        var LituusManager = (function (_super) {
+            __extends(LituusManager, _super);
+            function LituusManager() {
+                var _this = _super.call(this) || this;
+                var change = function () {
+                    _this.changeHandler();
+                };
+                var mousemove = function () {
+                    _this.mousemoveHandler();
+                };
+                _this._graph = new Lituus.LituusGraphManager();
+                _this._graph.draw();
+                _this.setInputValue();
+                var input = document.getElementById("LituusRotationSlider");
+                input.addEventListener("change", change);
+                input.addEventListener("mousemove", mousemove);
+                input = document.getElementById("LituusStartAngleSlider");
+                input.addEventListener("change", change);
+                input.addEventListener("mousemove", mousemove);
+                var checkOption = document.getElementsByName("LituusClockwiseRadio");
+                var n = checkOption.length;
+                for (var i = 0; i < n; i++) {
+                    var check = checkOption[i];
+                    check.addEventListener("change", change);
+                }
+                return _this;
+            }
+            LituusManager.prototype.setInputValue = function () {
+                _super.prototype.setInputValue.call(this);
+                var input = document.getElementById("LituusRotationSlider");
+                document.getElementById("LituusRotationValue").textContent = input.value;
+                input = document.getElementById("LituusStartAngleSlider");
+                document.getElementById("LituusStartAngleValue").textContent = input.value + "°";
+            };
+            return LituusManager;
+        }(SpiralManager));
+        Lituus.LituusManager = LituusManager;
+    })(Lituus = View.Lituus || (View.Lituus = {}));
+})(View || (View = {}));
+var View;
+(function (View) {
     var ArchimedesManager = View.Archimedes.ArchimedesManager;
     var LogarithmicManager = View.Logarithmic.LogarithmicManager;
+    var LituusManager = View.Lituus.LituusManager;
     var ViewManager = (function () {
         function ViewManager() {
             var archimedesManager = new ArchimedesManager();
             var logarithmicManager = new LogarithmicManager();
+            var lituusManager = new LituusManager();
         }
         return ViewManager;
     }());

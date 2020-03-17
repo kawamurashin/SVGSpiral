@@ -13,7 +13,7 @@ namespace View.Archimedes.Spiral {
 
             let input: HTMLInputElement = <HTMLInputElement>document.getElementById("ArchimedesRotationSlider");
             let rotation: number = Number(input.value);
-            const radius: number = ((-10 + this._centerX) / (2 * Math.PI * rotation));
+            const a: number = ((-10 + this._centerX) / (2 * Math.PI * rotation));
 
             input = <HTMLInputElement>document.getElementById("ArchimedesStartAngleSlider");
             let startAngle: number = Number(input.value);
@@ -26,11 +26,11 @@ namespace View.Archimedes.Spiral {
 
             let n: number = 360 * rotation;
             for (let i: number = 0; i < n; i++) {
-                let count: number = i * (Math.PI / 180);
-                let theta: number = startTheta + i * (Math.PI / 180) * clockwise;
-
-                let x = this._centerX + radius * count * Math.cos(theta);
-                let y = this._centerY + radius * count * Math.sin(theta);
+                let theta: number = i * (Math.PI / 180);
+                let radius:number = a * theta;
+                let rad: number = startTheta + i * (Math.PI / 180) * clockwise;
+                let x = this._centerX + radius * Math.cos(rad);
+                let y = this._centerY + radius * Math.sin(rad);
                 value += x + "," + y + " "
             }
             this._polyline.setAttributeNS(null, "points", value);

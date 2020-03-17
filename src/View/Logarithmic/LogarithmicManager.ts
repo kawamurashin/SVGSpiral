@@ -22,13 +22,16 @@ namespace View.Logarithmic
             this._graph.draw();
             this.setInputValue();
 
-            let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
-            input.addEventListener("change" , change);
-            input.addEventListener("mousemove" , mousemove);
+            let rotationInput:HTMLInputElement;
+            let startAngleInput:HTMLInputElement;
 
-            input = <HTMLInputElement>document.getElementById("LogarithmicStartSlider");
-            input.addEventListener("change" , change);
-            input.addEventListener("mousemove" , mousemove);
+            rotationInput= <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
+            rotationInput.addEventListener("change" , change);
+            rotationInput.addEventListener("mousemove" , mousemove);
+
+            startAngleInput = <HTMLInputElement>document.getElementById("LogarithmicStartAngleSlider");
+            startAngleInput.addEventListener("change" , change);
+            startAngleInput.addEventListener("mousemove" , mousemove);
 
             let checkOption = document.getElementsByName("LogarithmicClockwiseRadio");
             let n:number = checkOption.length;
@@ -57,7 +60,7 @@ namespace View.Logarithmic
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
             document.getElementById("LogarithmicRotationValue").textContent = input.value;
 
-            input = <HTMLInputElement>document.getElementById("LogarithmicStartSlider");
+            input = <HTMLInputElement>document.getElementById("LogarithmicStartAngleSlider");
             document.getElementById("LogarithmicStartAngleValue").textContent = input.value + "°";
         }
     }

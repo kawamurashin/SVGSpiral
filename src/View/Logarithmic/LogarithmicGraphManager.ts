@@ -14,7 +14,7 @@ namespace View.LogarithmicSpiralManager
             let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LogarithmicRotationSlider");
             let rotation: number = Number(input.value);
 
-            input = <HTMLInputElement>document.getElementById("LogarithmicStartSlider");
+            input = <HTMLInputElement>document.getElementById("LogarithmicStartAngleSlider");
             let startAngle:number = Number(input.value);
             let startTheta:number =startAngle *Math.PI /180;
 
