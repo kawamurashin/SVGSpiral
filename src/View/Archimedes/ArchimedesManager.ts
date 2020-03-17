@@ -12,19 +12,8 @@ namespace View.Archimedes {
             this._startAngleSliderKey = "ArchimedesStartAngleSlider";
             this._startAngleValueKey = "ArchimedesStartAngleValue";
             this._radioKey = "ArchimedesClockwiseRadio";
-
             this.init();
-
             this._graph = new ArchimedesGraphManager();
-            /*
-            this._rotationInput = <HTMLInputElement>document.getElementById("ArchimedesRotationSlider");
-            this._startAngleInput =  <HTMLInputElement>document.getElementById("ArchimedesStartAngleSlider")
-            this._clockwiseList = document.getElementsByName("ArchimedesClockwiseRadio");
-            this._rotationValue = document.getElementById("ArchimedesRotationValue");
-            this._startAngleValue = document.getElementById("ArchimedesStartAngleValue");
-
-             */
-
         }
     }
 }

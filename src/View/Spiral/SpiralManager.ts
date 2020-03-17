@@ -1,21 +1,20 @@
 namespace View.Spiral
 {
     export class SpiralManager {
-        protected _graph:GraphManager;
-        protected _rotationInput:HTMLInputElement;
-        protected _startAngleInput:HTMLInputElement;
-        protected _clockwiseList:NodeList;
-        //
-        protected _rotationValue:HTMLElement;
-        protected _startAngleValue:HTMLElement;
-
-
         protected _svgKey:string;
         protected _rotationSliderKey:string;
         protected _rotationValueKey:string;
         protected _startAngleSliderKey:string;
         protected _startAngleValueKey:string;
         protected _radioKey:string;
+
+        protected _graph:GraphManager;
+        //
+        private _rotationInput:HTMLInputElement;
+        private _startAngleInput:HTMLInputElement;
+        private _clockwiseList:NodeList;
+        private _rotationValue:HTMLElement;
+        private _startAngleValue:HTMLElement;
         constructor() {
 
         }

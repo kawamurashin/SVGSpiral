@@ -20,7 +20,6 @@ var View;
             }
             GraphManager.prototype.init = function () {
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                console.log("this._svg :" + this._svg);
                 this._svg.appendChild(this._polyline);
                 this._polyline.setAttributeNS(null, "stroke", "#FFF");
                 this._polyline.setAttributeNS(null, "stroke-width", "2");
