@@ -20,6 +20,7 @@ var View;
             }
             GraphManager.prototype.init = function () {
                 this._polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                console.log("this._svg :" + this._svg);
                 this._svg.appendChild(this._polyline);
                 this._polyline.setAttributeNS(null, "stroke", "#FFF");
                 this._polyline.setAttributeNS(null, "stroke-width", "2");
@@ -28,6 +29,7 @@ var View;
                 var height = Number(this._svg.getAttribute("height"));
                 this._centerX = width * 0.5;
                 this._centerY = height * 0.5;
+                this.draw();
             };
             GraphManager.prototype.draw = function () {
             };
@@ -86,6 +88,89 @@ var View;
         var SpiralManager = (function () {
             function SpiralManager() {
             }
+            SpiralManager.prototype.init = function () {
+                var _this = this;
+                var change = function () {
+                    _this.changeHandler();
+                };
+                var mousemove = function () {
+                    _this.mousemoveHandler();
+                };
+                var element = document.createElement('div');
+                var wrapper = document.getElementById("wrapper");
+                wrapper.appendChild(element);
+                element.innerHTML = "Logarithmic Spiral<br>";
+                var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("id", this._svgKey);
+                svg.setAttribute("class", "svg");
+                svg.setAttribute("width", "480");
+                svg.setAttribute("height", "480");
+                svg.setAttribute("viewBox", "0 0 480 480");
+                element.appendChild(svg);
+                var child = document.createElement('div');
+                element.appendChild(child);
+                var label = document.createElement('label');
+                label.setAttribute("for", this._rotationSliderKey);
+                label.setAttribute("class", "title-head");
+                label.innerHTML = "Rotation";
+                child.appendChild(label);
+                this._rotationInput = document.createElement('input');
+                this._rotationInput.setAttribute("type", "range");
+                this._rotationInput.setAttribute("id", this._rotationSliderKey);
+                this._rotationInput.setAttribute("value", "5");
+                this._rotationInput.setAttribute("min", "2");
+                this._rotationInput.setAttribute("max", "50");
+                this._rotationInput.setAttribute("step", "0.1");
+                child.appendChild(this._rotationInput);
+                this._rotationValue = document.createElement('span');
+                this._rotationValue.setAttribute("id", this._rotationValueKey);
+                child.appendChild(this._rotationValue);
+                child = document.createElement('div');
+                element.appendChild(child);
+                label = document.createElement('label');
+                label.setAttribute("for", this._startAngleSliderKey);
+                label.setAttribute("class", "title-head");
+                label.innerHTML = "Starting Angle";
+                child.appendChild(label);
+                this._startAngleInput = document.createElement('input');
+                this._startAngleInput.setAttribute("type", "range");
+                this._startAngleInput.setAttribute("id", this._startAngleSliderKey);
+                this._startAngleInput.setAttribute("value", "0");
+                this._startAngleInput.setAttribute("min", "0");
+                this._startAngleInput.setAttribute("max", "360");
+                child.appendChild(this._startAngleInput);
+                this._startAngleValue = document.createElement('span');
+                this._startAngleValue.setAttribute("id", this._startAngleValueKey);
+                child.appendChild(this._startAngleValue);
+                child = document.createElement('div');
+                element.appendChild(child);
+                var radio = document.createElement('input');
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", this._radioKey);
+                radio.setAttribute("value", "1");
+                radio.checked = true;
+                child.appendChild(radio);
+                child.innerHTML += "clockwise ";
+                radio = document.createElement('input');
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", this._radioKey);
+                radio.setAttribute("value", "-1");
+                child.appendChild(radio);
+                child.innerHTML += "anticlockwise";
+                this._clockwiseList = document.getElementsByName(this._radioKey);
+                var radioElement = this._clockwiseList[0];
+                radioElement.checked = true;
+                this._rotationInput.addEventListener("change", change);
+                this._rotationInput.addEventListener("mousemove", mousemove);
+                this._startAngleInput.addEventListener("change", change);
+                this._startAngleInput.addEventListener("mousemove", mousemove);
+                var n = this._clockwiseList.length;
+                for (var i = 0; i < n; i++) {
+                    var check = this._clockwiseList[i];
+                    check.addEventListener("change", change);
+                }
+                this.setInputValue();
+            };
             SpiralManager.prototype.changeHandler = function () {
                 this.setInputValue();
                 this._graph.draw();
@@ -95,6 +180,8 @@ var View;
                 this._graph.draw();
             };
             SpiralManager.prototype.setInputValue = function () {
+                this._rotationValue.textContent = this._rotationInput.value;
+                this._startAngleValue.textContent = this._startAngleInput.value + "°";
             };
             return SpiralManager;
         }());
@@ -111,36 +198,16 @@ var View;
             __extends(ArchimedesManager, _super);
             function ArchimedesManager() {
                 var _this = _super.call(this) || this;
-                var change = function () {
-                    _this.changeHandler();
-                };
-                var mousemove = function () {
-                    _this.mousemoveHandler();
-                };
+                _this._svgKey = "ArchimedesSpiral";
+                _this._rotationSliderKey = "ArchimedesRotationSlider";
+                _this._rotationValueKey = "ArchimedesRotationValue";
+                _this._startAngleSliderKey = "ArchimedesStartAngleSlider";
+                _this._startAngleValueKey = "ArchimedesStartAngleValue";
+                _this._radioKey = "ArchimedesClockwiseRadio";
+                _this.init();
                 _this._graph = new ArchimedesGraphManager();
-                _this._graph.draw();
-                _this.setInputValue();
-                var input = document.getElementById("ArchimedesRotationSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
-                input = document.getElementById("ArchimedesStartAngleSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
-                var checkOption = document.getElementsByName("ArchimedesClockwiseRadio");
-                var n = checkOption.length;
-                for (var i = 0; i < n; i++) {
-                    var check = checkOption[i];
-                    check.addEventListener("change", change);
-                }
                 return _this;
             }
-            ArchimedesManager.prototype.setInputValue = function () {
-                _super.prototype.setInputValue.call(this);
-                var input = document.getElementById("ArchimedesRotationSlider");
-                document.getElementById("ArchimedesRotationValue").textContent = input.value;
-                input = document.getElementById("ArchimedesStartAngleSlider");
-                document.getElementById("ArchimedesStartAngleValue").textContent = input.value + "°";
-            };
             return ArchimedesManager;
         }(SpiralManager));
         Archimedes.ArchimedesManager = ArchimedesManager;
@@ -197,38 +264,16 @@ var View;
             __extends(LogarithmicManager, _super);
             function LogarithmicManager() {
                 var _this = _super.call(this) || this;
-                var change = function () {
-                    _this.changeHandler();
-                };
-                var mousemove = function () {
-                    _this.mousemoveHandler();
-                };
+                _this._svgKey = "LogarithmicSpiral";
+                _this._rotationSliderKey = "LogarithmicRotationSlider";
+                _this._rotationValueKey = "LogarithmicRotationValue";
+                _this._startAngleSliderKey = "LogarithmicStartAngleSlider";
+                _this._startAngleValueKey = "LogarithmicStartAngleValue";
+                _this._radioKey = "LogarithmicClockwiseRadio";
+                _this.init();
                 _this._graph = new LogarithmicGraphManager();
-                _this._graph.draw();
-                _this.setInputValue();
-                var rotationInput;
-                var startAngleInput;
-                rotationInput = document.getElementById("LogarithmicRotationSlider");
-                rotationInput.addEventListener("change", change);
-                rotationInput.addEventListener("mousemove", mousemove);
-                startAngleInput = document.getElementById("LogarithmicStartAngleSlider");
-                startAngleInput.addEventListener("change", change);
-                startAngleInput.addEventListener("mousemove", mousemove);
-                var checkOption = document.getElementsByName("LogarithmicClockwiseRadio");
-                var n = checkOption.length;
-                for (var i = 0; i < n; i++) {
-                    var check = checkOption[i];
-                    check.addEventListener("change", change);
-                }
                 return _this;
             }
-            LogarithmicManager.prototype.setInputValue = function () {
-                _super.prototype.setInputValue.call(this);
-                var input = document.getElementById("LogarithmicRotationSlider");
-                document.getElementById("LogarithmicRotationValue").textContent = input.value;
-                input = document.getElementById("LogarithmicStartAngleSlider");
-                document.getElementById("LogarithmicStartAngleValue").textContent = input.value + "°";
-            };
             return LogarithmicManager;
         }(SpiralManager));
         Logarithmic.LogarithmicManager = LogarithmicManager;
@@ -283,36 +328,16 @@ var View;
             __extends(LituusManager, _super);
             function LituusManager() {
                 var _this = _super.call(this) || this;
-                var change = function () {
-                    _this.changeHandler();
-                };
-                var mousemove = function () {
-                    _this.mousemoveHandler();
-                };
+                _this._svgKey = "Lituus";
+                _this._rotationSliderKey = "LituusRotationSlider";
+                _this._rotationValueKey = "LituusRotationValue";
+                _this._startAngleSliderKey = "LituusStartAngleSlider";
+                _this._startAngleValueKey = "LituusStartAngleValue";
+                _this._radioKey = "LituusClockwiseRadio";
+                _this.init();
                 _this._graph = new Lituus.LituusGraphManager();
-                _this._graph.draw();
-                _this.setInputValue();
-                var input = document.getElementById("LituusRotationSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
-                input = document.getElementById("LituusStartAngleSlider");
-                input.addEventListener("change", change);
-                input.addEventListener("mousemove", mousemove);
-                var checkOption = document.getElementsByName("LituusClockwiseRadio");
-                var n = checkOption.length;
-                for (var i = 0; i < n; i++) {
-                    var check = checkOption[i];
-                    check.addEventListener("change", change);
-                }
                 return _this;
             }
-            LituusManager.prototype.setInputValue = function () {
-                _super.prototype.setInputValue.call(this);
-                var input = document.getElementById("LituusRotationSlider");
-                document.getElementById("LituusRotationValue").textContent = input.value;
-                input = document.getElementById("LituusStartAngleSlider");
-                document.getElementById("LituusStartAngleValue").textContent = input.value + "°";
-            };
             return LituusManager;
         }(SpiralManager));
         Lituus.LituusManager = LituusManager;

@@ -2,47 +2,28 @@
 namespace View.Lituus
 {
     import SpiralManager = View.Spiral.SpiralManager;
-
     export class LituusManager extends SpiralManager{
         constructor() {
             super();
-            const change = () =>
-            {
-                this.changeHandler();
-            };
-            const mousemove = () =>
-            {
-                this.mousemoveHandler();
-            };
+            this._svgKey = "Lituus";
+            this._rotationSliderKey = "LituusRotationSlider";
+            this._rotationValueKey = "LituusRotationValue";
+            this._startAngleSliderKey = "LituusStartAngleSlider";
+            this._startAngleValueKey = "LituusStartAngleValue";
+            this._radioKey = "LituusClockwiseRadio";
+
+            this.init();
+
             this._graph = new LituusGraphManager();
-            this._graph.draw();
-            this.setInputValue();
+            /*
+            this._rotationInput = <HTMLInputElement>document.getElementById("LituusRotationSlider");
+            this._startAngleInput  = <HTMLInputElement>document.getElementById("LituusStartAngleSlider");
+            this._clockwiseList = document.getElementsByName("LituusClockwiseRadio");
+            this._rotationValue = document.getElementById("LituusRotationValue");
+            this._startAngleValue = document.getElementById("LituusStartAngleValue");
 
+             */
 
-            let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LituusRotationSlider");
-            input.addEventListener("change" , change);
-            input.addEventListener("mousemove" , mousemove);
-
-            input = <HTMLInputElement>document.getElementById("LituusStartAngleSlider");
-            input.addEventListener("change" , change);
-            input.addEventListener("mousemove" , mousemove);
-
-            let checkOption = document.getElementsByName("LituusClockwiseRadio");
-            let n:number = checkOption.length;
-            for(let i:number = 0;i<n;i++)
-            {
-                let check = checkOption[i];
-                check.addEventListener("change" , change);
-            }
-        }
-        protected setInputValue():void
-        {
-            super.setInputValue();
-            let input:HTMLInputElement = <HTMLInputElement>document.getElementById("LituusRotationSlider");
-            document.getElementById("LituusRotationValue").textContent = input.value;
-
-            input = <HTMLInputElement>document.getElementById("LituusStartAngleSlider");
-            document.getElementById("LituusStartAngleValue").textContent = input.value + "°";
         }
     }
 }
