@@ -25,5 +25,8 @@ namespace View.Spiral
             this._layer.appendChild(this._circle);
         }
 
+        remove() {
+            this._layer.removeChild(this._circle);
+        }
     }
 }

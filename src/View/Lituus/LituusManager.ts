@@ -12,6 +12,8 @@ namespace View.Lituus
             this._startAngleSliderKey = "LituusStartAngleSlider";
             this._startAngleValueKey = "LituusStartAngleValue";
             this._radioKey = "LituusClockwiseRadio";
+            this._speedSliderKey = "LituusSpeedSlider";
+            this._speedValueKey = "LituusSpeedValue";
             this.init();
             this._graph = new LituusGraphManager();
             //

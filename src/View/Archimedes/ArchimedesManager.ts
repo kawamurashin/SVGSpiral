@@ -13,6 +13,8 @@ namespace View.Archimedes {
             this._startAngleSliderKey = "ArchimedesStartAngleSlider";
             this._startAngleValueKey = "ArchimedesStartAngleValue";
             this._radioKey = "ArchimedesClockwiseRadio";
+            this._speedSliderKey = "ArchimedesSpeedSlider";
+            this._speedValueKey = "ArchimedesSpeedValue";
             this.init();
             this._graph = new ArchimedesGraphManager();
             //

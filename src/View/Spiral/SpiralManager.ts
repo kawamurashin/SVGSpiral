@@ -2,7 +2,6 @@
 namespace View.Spiral
 {
     import Vector2 = View.Geom.Vector2;
-
     export class SpiralManager {
         protected _name:string;
         protected _svgKey:string;
@@ -11,14 +10,18 @@ namespace View.Spiral
         protected _startAngleSliderKey:string;
         protected _startAngleValueKey:string;
         protected _radioKey:string;
-
+        protected _speedSliderKey:string;
+        protected _speedValueKey:string;
+        //
         protected _graph:GraphManager;
         //
         private _rotationInput:HTMLInputElement;
-        private _startAngleInput:HTMLInputElement;
-        private _clockwiseList:NodeList;
         private _rotationValue:HTMLElement;
+        private _startAngleInput:HTMLInputElement;
         private _startAngleValue:HTMLElement;
+        private _clockwiseList:NodeList;
+        private _speedInput:HTMLInputElement;
+        private _speedValue:HTMLElement;
         //
         private _ballManager:BallManager;
         constructor() {
@@ -47,8 +50,7 @@ namespace View.Spiral
             svg.setAttribute("viewBox", "0 0 480 480");
             element.appendChild(svg);
 
-
-
+            //回転数
             let child = document.createElement('div');
             element.appendChild(child);
             let label = document.createElement('label');
@@ -69,6 +71,7 @@ namespace View.Spiral
             this._rotationValue.setAttribute("id", this._rotationValueKey);
             child.appendChild(this._rotationValue)
 
+            //開始角
             child = document.createElement('div');
             element.appendChild(child);
             label = document.createElement('label');
@@ -88,9 +91,9 @@ namespace View.Spiral
             this._startAngleValue.setAttribute("id", this._startAngleValueKey);
             child.appendChild(this._startAngleValue);
 
+            //方向
             child = document.createElement('div');
             element.appendChild(child);
-
 
             let radio = document.createElement('input');
             radio.setAttribute("type", "radio");
@@ -110,12 +113,35 @@ namespace View.Spiral
             this._clockwiseList = document.getElementsByName(this._radioKey);
             let radioElement:HTMLInputElement = <HTMLInputElement>this._clockwiseList[0];
             radioElement.checked  = true;
+            //スピード
+            child = document.createElement('div');
+            element.appendChild(child);
+            label = document.createElement('label');
+            label.setAttribute("for", this._speedSliderKey);
+            label.setAttribute("class", "title-head");
+            label.innerHTML = "Speed";
+            child.appendChild(label);
+            this._speedInput = document.createElement('input');
+            this._speedInput.setAttribute("type", "range");
+            this._speedInput.setAttribute("id", this._speedSliderKey);
+            this._speedInput.setAttribute("value", "5");
+            this._speedInput.setAttribute("min", "1");
+            this._speedInput.setAttribute("max", "20");
+            child.appendChild(this._speedInput);
 
+            this._speedValue = document.createElement('span');
+            this._speedValue.setAttribute("id", this._speedValueKey);
+            child.appendChild(this._speedValue);
+
+            //events
             this._rotationInput.addEventListener("change" , change);
             this._rotationInput.addEventListener("mousemove" , mousemove);
 
             this._startAngleInput.addEventListener("change" , change);
             this._startAngleInput.addEventListener("mousemove" , mousemove);
+
+            this._speedInput.addEventListener("change" , change);
+            this._speedInput.addEventListener("mousemove" , mousemove);
 
             let n:number = this._clockwiseList.length;
             for(let i:number = 0;i<n;i++)
@@ -124,17 +150,15 @@ namespace View.Spiral
                 check.addEventListener("change" , change);
             }
 
+            //ball
             const click = () =>
             {
                 this.screenClickHandler();
             };
             svg.addEventListener("click" , click);
-
             let layer:SVGElement = document.createElementNS("http://www.w3.org/2000/svg","g");
             svg.appendChild(layer);
-
             this._ballManager = new BallManager(layer);
-
         }
         public enterFrame():void
         {
@@ -162,6 +186,9 @@ namespace View.Spiral
         {
             this._rotationValue.textContent = this._rotationInput.value;
             this._startAngleValue.textContent = this._startAngleInput.value + "°";
+            this._speedValue.textContent = this._speedInput.value;
+
+            this._ballManager.setSpeed(this._speedInput.value);
         }
 
         private screenClickHandler():void

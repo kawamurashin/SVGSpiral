@@ -15,6 +15,8 @@ namespace View.Logarithmic
             this._startAngleSliderKey = "LogarithmicStartAngleSlider";
             this._startAngleValueKey = "LogarithmicStartAngleValue";
             this._radioKey = "LogarithmicClockwiseRadio";
+            this._speedSliderKey = "LogarithmicSpeedSlider";
+            this._speedValueKey = "LogarithmicSpeedValue";
             this.init();
             this._graph = new LogarithmicGraphManager();
             //

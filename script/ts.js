@@ -116,18 +116,57 @@ var View;
         var BallManager = (function () {
             function BallManager(layer) {
                 this._layer = layer;
+                this._ballList = [];
+                this._pointList = [];
             }
             BallManager.prototype.start = function () {
-                console.log(this._pointList.length * Math.random());
-                var vector2 = this._pointList[this._pointList.length * Math.random()];
+                var vector2 = this._pointList[0];
                 var ball = new Spiral.BallObject(this._layer);
                 ball.x = vector2.x;
                 ball.y = vector2.y;
+                this._ballList.push(ball);
             };
             BallManager.prototype.enterFrame = function () {
+                var n = this._ballList.length;
+                for (var i = 0; i < n; i++) {
+                    var ballObject = this._ballList[i];
+                    ballObject.count += this._speed;
+                }
+                this.checkPosition();
+                n = this._ballList.length;
+                for (var i = 0; i < n; i++) {
+                    var ballObject = this._ballList[i];
+                    var vector2 = this._pointList[ballObject.count];
+                    ballObject.x = vector2.x;
+                    ballObject.y = vector2.y;
+                }
             };
             BallManager.prototype.setPointList = function (pointList) {
-                this._pointList = pointList;
+                if (this._pointList.length != pointList.length) {
+                    this._pointList = pointList;
+                    var n = this._ballList.length;
+                    for (var i = 0; i < n; i++) {
+                        var ballObject = this._ballList[i];
+                        ballObject.remove();
+                    }
+                    this._ballList = [];
+                }
+            };
+            BallManager.prototype.checkPosition = function () {
+                var n = this._ballList.length;
+                for (var i = 0; i < n; i++) {
+                    var ballObject = this._ballList[i];
+                    if (ballObject.count >= this._pointList.length) {
+                        this._ballList.splice(i, 1);
+                        ballObject.remove();
+                        this.checkPosition();
+                        break;
+                    }
+                }
+            };
+            BallManager.prototype.setSpeed = function (value) {
+                this._speed = Number(value);
+                console.log("setspeed :" + this._speed);
             };
             return BallManager;
         }());
@@ -213,10 +252,29 @@ var View;
                 this._clockwiseList = document.getElementsByName(this._radioKey);
                 var radioElement = this._clockwiseList[0];
                 radioElement.checked = true;
+                child = document.createElement('div');
+                element.appendChild(child);
+                label = document.createElement('label');
+                label.setAttribute("for", this._speedSliderKey);
+                label.setAttribute("class", "title-head");
+                label.innerHTML = "Speed";
+                child.appendChild(label);
+                this._speedInput = document.createElement('input');
+                this._speedInput.setAttribute("type", "range");
+                this._speedInput.setAttribute("id", this._speedSliderKey);
+                this._speedInput.setAttribute("value", "5");
+                this._speedInput.setAttribute("min", "1");
+                this._speedInput.setAttribute("max", "20");
+                child.appendChild(this._speedInput);
+                this._speedValue = document.createElement('span');
+                this._speedValue.setAttribute("id", this._speedValueKey);
+                child.appendChild(this._speedValue);
                 this._rotationInput.addEventListener("change", change);
                 this._rotationInput.addEventListener("mousemove", mousemove);
                 this._startAngleInput.addEventListener("change", change);
                 this._startAngleInput.addEventListener("mousemove", mousemove);
+                this._speedInput.addEventListener("change", change);
+                this._speedInput.addEventListener("mousemove", mousemove);
                 var n = this._clockwiseList.length;
                 for (var i = 0; i < n; i++) {
                     var check = this._clockwiseList[i];
@@ -248,6 +306,8 @@ var View;
             SpiralManager.prototype.setInputValue = function () {
                 this._rotationValue.textContent = this._rotationInput.value;
                 this._startAngleValue.textContent = this._startAngleInput.value + "°";
+                this._speedValue.textContent = this._speedInput.value;
+                this._ballManager.setSpeed(this._speedInput.value);
             };
             SpiralManager.prototype.screenClickHandler = function () {
                 this._ballManager.start();
@@ -274,6 +334,8 @@ var View;
                 _this._startAngleSliderKey = "ArchimedesStartAngleSlider";
                 _this._startAngleValueKey = "ArchimedesStartAngleValue";
                 _this._radioKey = "ArchimedesClockwiseRadio";
+                _this._speedSliderKey = "ArchimedesSpeedSlider";
+                _this._speedValueKey = "ArchimedesSpeedValue";
                 _this.init();
                 _this._graph = new ArchimedesGraphManager();
                 _this.draw();
@@ -346,6 +408,8 @@ var View;
                 _this._startAngleSliderKey = "LogarithmicStartAngleSlider";
                 _this._startAngleValueKey = "LogarithmicStartAngleValue";
                 _this._radioKey = "LogarithmicClockwiseRadio";
+                _this._speedSliderKey = "LogarithmicSpeedSlider";
+                _this._speedValueKey = "LogarithmicSpeedValue";
                 _this.init();
                 _this._graph = new LogarithmicGraphManager();
                 _this.draw();
@@ -416,6 +480,8 @@ var View;
                 _this._startAngleSliderKey = "LituusStartAngleSlider";
                 _this._startAngleValueKey = "LituusStartAngleValue";
                 _this._radioKey = "LituusClockwiseRadio";
+                _this._speedSliderKey = "LituusSpeedSlider";
+                _this._speedValueKey = "LituusSpeedValue";
                 _this.init();
                 _this._graph = new Lituus.LituusGraphManager();
                 _this.draw();
@@ -500,6 +566,9 @@ var View;
                 enumerable: true,
                 configurable: true
             });
+            BallObject.prototype.remove = function () {
+                this._layer.removeChild(this._circle);
+            };
             return BallObject;
         }());
         Spiral.BallObject = BallObject;
