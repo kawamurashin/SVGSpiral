@@ -2,7 +2,6 @@
 namespace View.Spiral
 {
     import Vector2 = View.Geom.Vector2;
-
     export class BallManager {
         private _ballList:BallObject[];
         private _pointList:Vector2[];
@@ -42,19 +41,23 @@ namespace View.Spiral
 
 
         setPointList(pointList: Vector2[]) {
-            if(this._pointList.length != pointList.length)
+            /*
+            if(this._pointList.length == pointList.length)
             {
-                this._pointList = pointList;
-
-                let n:number = this._ballList.length;
-                for(let i:number = 0;i<n;i++)
-                {
-                    let ballObject = this._ballList[i];
-                    ballObject.remove();
-                }
-                this._ballList = [];
+                return;
             }
+            if(this._pointList[this._pointList.length-1].x == pointList)
 
+
+             */
+            this._pointList = pointList;
+            let n:number = this._ballList.length;
+            for(let i:number = 0;i<n;i++)
+            {
+                let ballObject = this._ballList[i];
+                ballObject.remove();
+            }
+            this._ballList = [];
         }
 
         private checkPosition():void
@@ -76,8 +79,6 @@ namespace View.Spiral
 
         setSpeed(value: string) {
             this._speed = Number(value);
-            console.log("setspeed :" + this._speed)
-
         }
     }
 }

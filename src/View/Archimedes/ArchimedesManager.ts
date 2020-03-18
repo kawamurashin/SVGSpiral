@@ -1,7 +1,7 @@
 ///<reference path="ArchimedesGraphManager.ts"/>
 ///<reference path="../Spiral/SpiralManager.ts"/>
 namespace View.Archimedes {
-    import ArchimedesGraphManager = View.Archimedes.Spiral.ArchimedesGraphManager;
+    import ArchimedesGraphManager = View.Archimedes.ArchimedesGraphManager;
     import SpiralManager = View.Spiral.SpiralManager;
     export class ArchimedesManager extends SpiralManager{
         constructor() {
@@ -19,6 +19,7 @@ namespace View.Archimedes {
             this._graph = new ArchimedesGraphManager();
             //
             this.draw();
+            this.setSpeed();
         }
     }
 }

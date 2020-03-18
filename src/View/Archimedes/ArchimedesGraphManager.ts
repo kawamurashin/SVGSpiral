@@ -1,5 +1,5 @@
 ///<reference path="../Spiral/GraphManager.ts"/>
-namespace View.Archimedes.Spiral {
+namespace View.Archimedes {
     import GraphManager = View.Spiral.GraphManager;
     import Vector2 = View.Geom.Vector2;
     export class ArchimedesGraphManager extends GraphManager {

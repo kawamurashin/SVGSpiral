@@ -2,7 +2,7 @@
 ///<reference path="../Spiral/SpiralManager.ts"/>
 namespace View.Logarithmic
 {
-    import LogarithmicGraphManager = View.LogarithmicSpiralManager.LogarithmicGraphManager;
+    import LogarithmicGraphManager = View.Logarithmic.LogarithmicGraphManager;
     import SpiralManager = View.Spiral.SpiralManager;
     export class LogarithmicManager extends SpiralManager{
 
@@ -21,6 +21,7 @@ namespace View.Logarithmic
             this._graph = new LogarithmicGraphManager();
             //
             this.draw();
+            this.setSpeed();
         }
     }
 }

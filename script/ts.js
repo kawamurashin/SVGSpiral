@@ -66,47 +66,44 @@ var View;
 (function (View) {
     var Archimedes;
     (function (Archimedes) {
-        var Spiral;
-        (function (Spiral) {
-            var GraphManager = View.Spiral.GraphManager;
-            var Vector2 = View.Geom.Vector2;
-            var ArchimedesGraphManager = (function (_super) {
-                __extends(ArchimedesGraphManager, _super);
-                function ArchimedesGraphManager() {
-                    var _this = _super.call(this) || this;
-                    _this._svg = document.getElementById("ArchimedesSpiral");
-                    _this.init();
-                    return _this;
+        var GraphManager = View.Spiral.GraphManager;
+        var Vector2 = View.Geom.Vector2;
+        var ArchimedesGraphManager = (function (_super) {
+            __extends(ArchimedesGraphManager, _super);
+            function ArchimedesGraphManager() {
+                var _this = _super.call(this) || this;
+                _this._svg = document.getElementById("ArchimedesSpiral");
+                _this.init();
+                return _this;
+            }
+            ArchimedesGraphManager.prototype.draw = function () {
+                _super.prototype.draw.call(this);
+                this._pointList = [];
+                var input = document.getElementById("ArchimedesRotationSlider");
+                var rotation = Number(input.value);
+                var a = ((-10 + this._centerX) / (2 * Math.PI * rotation));
+                input = document.getElementById("ArchimedesStartAngleSlider");
+                var startAngle = Number(input.value);
+                var startTheta = startAngle * Math.PI / 180;
+                input = document.querySelector("input:checked[name=ArchimedesClockwiseRadio]");
+                var clockwise = Number(input.value);
+                var value = this._centerX + "," + this._centerY + " ";
+                var n = 360 * rotation;
+                for (var i = 0; i < n; i++) {
+                    var theta = i * (Math.PI / 180);
+                    var radius = a * theta;
+                    var rad = startTheta + i * (Math.PI / 180) * clockwise;
+                    var vector2 = new Vector2();
+                    vector2.x = this._centerX + radius * Math.cos(rad);
+                    vector2.y = this._centerY + radius * Math.sin(rad);
+                    value += vector2.x + "," + vector2.y + " ";
+                    this._pointList.push(vector2);
                 }
-                ArchimedesGraphManager.prototype.draw = function () {
-                    _super.prototype.draw.call(this);
-                    this._pointList = [];
-                    var input = document.getElementById("ArchimedesRotationSlider");
-                    var rotation = Number(input.value);
-                    var a = ((-10 + this._centerX) / (2 * Math.PI * rotation));
-                    input = document.getElementById("ArchimedesStartAngleSlider");
-                    var startAngle = Number(input.value);
-                    var startTheta = startAngle * Math.PI / 180;
-                    input = document.querySelector("input:checked[name=ArchimedesClockwiseRadio]");
-                    var clockwise = Number(input.value);
-                    var value = this._centerX + "," + this._centerY + " ";
-                    var n = 360 * rotation;
-                    for (var i = 0; i < n; i++) {
-                        var theta = i * (Math.PI / 180);
-                        var radius = a * theta;
-                        var rad = startTheta + i * (Math.PI / 180) * clockwise;
-                        var vector2 = new Vector2();
-                        vector2.x = this._centerX + radius * Math.cos(rad);
-                        vector2.y = this._centerY + radius * Math.sin(rad);
-                        value += vector2.x + "," + vector2.y + " ";
-                        this._pointList.push(vector2);
-                    }
-                    this._polyline.setAttributeNS(null, "points", value);
-                };
-                return ArchimedesGraphManager;
-            }(GraphManager));
-            Spiral.ArchimedesGraphManager = ArchimedesGraphManager;
-        })(Spiral = Archimedes.Spiral || (Archimedes.Spiral = {}));
+                this._polyline.setAttributeNS(null, "points", value);
+            };
+            return ArchimedesGraphManager;
+        }(GraphManager));
+        Archimedes.ArchimedesGraphManager = ArchimedesGraphManager;
     })(Archimedes = View.Archimedes || (View.Archimedes = {}));
 })(View || (View = {}));
 var View;
@@ -142,15 +139,13 @@ var View;
                 }
             };
             BallManager.prototype.setPointList = function (pointList) {
-                if (this._pointList.length != pointList.length) {
-                    this._pointList = pointList;
-                    var n = this._ballList.length;
-                    for (var i = 0; i < n; i++) {
-                        var ballObject = this._ballList[i];
-                        ballObject.remove();
-                    }
-                    this._ballList = [];
+                this._pointList = pointList;
+                var n = this._ballList.length;
+                for (var i = 0; i < n; i++) {
+                    var ballObject = this._ballList[i];
+                    ballObject.remove();
                 }
+                this._ballList = [];
             };
             BallManager.prototype.checkPosition = function () {
                 var n = this._ballList.length;
@@ -166,7 +161,6 @@ var View;
             };
             BallManager.prototype.setSpeed = function (value) {
                 this._speed = Number(value);
-                console.log("setspeed :" + this._speed);
             };
             return BallManager;
         }());
@@ -188,8 +182,11 @@ var View;
                 var mousemove = function () {
                     _this.mousemoveHandler();
                 };
+                var mousedown = function () {
+                    _this.mousedownHandler();
+                };
                 var element = document.createElement('div');
-                var wrapper = document.getElementById("wrapper");
+                var wrapper = document.getElementById("contents");
                 wrapper.appendChild(element);
                 element.innerHTML = this._name + "<br>";
                 var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -270,11 +267,14 @@ var View;
                 this._speedValue.setAttribute("id", this._speedValueKey);
                 child.appendChild(this._speedValue);
                 this._rotationInput.addEventListener("change", change);
-                this._rotationInput.addEventListener("mousemove", mousemove);
+                this._rotationInput.addEventListener("mousedown", mousedown);
                 this._startAngleInput.addEventListener("change", change);
-                this._startAngleInput.addEventListener("mousemove", mousemove);
-                this._speedInput.addEventListener("change", change);
-                this._speedInput.addEventListener("mousemove", mousemove);
+                this._startAngleInput.addEventListener("mousedown", mousedown);
+                var speed = function () {
+                    _this.speedHandler();
+                };
+                this._speedInput.addEventListener("change", speed);
+                this._speedInput.addEventListener("mousemove", speed);
                 var n = this._clockwiseList.length;
                 for (var i = 0; i < n; i++) {
                     var check = this._clockwiseList[i];
@@ -297,17 +297,34 @@ var View;
                 var pointList = this._graph.pointList;
                 this._ballManager.setPointList(pointList);
             };
+            SpiralManager.prototype.setSpeed = function () {
+                this._speedValue.textContent = this._speedInput.value;
+                this._ballManager.setSpeed(this._speedInput.value);
+            };
             SpiralManager.prototype.changeHandler = function () {
                 this.draw();
+            };
+            SpiralManager.prototype.mousedownHandler = function () {
+                var _this = this;
+                var mousemove = function () {
+                    _this.mousemoveHandler();
+                };
+                var mouseup = function () {
+                    window.removeEventListener("mousemove", mousemove);
+                    window.removeEventListener("mouseup", mouseup);
+                };
+                window.addEventListener("mousemove", mousemove);
+                window.addEventListener("mouseup", mouseup);
             };
             SpiralManager.prototype.mousemoveHandler = function () {
                 this.draw();
             };
+            SpiralManager.prototype.speedHandler = function () {
+                this.setSpeed();
+            };
             SpiralManager.prototype.setInputValue = function () {
                 this._rotationValue.textContent = this._rotationInput.value;
                 this._startAngleValue.textContent = this._startAngleInput.value + "°";
-                this._speedValue.textContent = this._speedInput.value;
-                this._ballManager.setSpeed(this._speedInput.value);
             };
             SpiralManager.prototype.screenClickHandler = function () {
                 this._ballManager.start();
@@ -321,7 +338,7 @@ var View;
 (function (View) {
     var Archimedes;
     (function (Archimedes) {
-        var ArchimedesGraphManager = View.Archimedes.Spiral.ArchimedesGraphManager;
+        var ArchimedesGraphManager = View.Archimedes.ArchimedesGraphManager;
         var SpiralManager = View.Spiral.SpiralManager;
         var ArchimedesManager = (function (_super) {
             __extends(ArchimedesManager, _super);
@@ -339,6 +356,7 @@ var View;
                 _this.init();
                 _this._graph = new ArchimedesGraphManager();
                 _this.draw();
+                _this.setSpeed();
                 return _this;
             }
             return ArchimedesManager;
@@ -348,8 +366,8 @@ var View;
 })(View || (View = {}));
 var View;
 (function (View) {
-    var LogarithmicSpiralManager;
-    (function (LogarithmicSpiralManager) {
+    var Logarithmic;
+    (function (Logarithmic) {
         var GraphManager = View.Spiral.GraphManager;
         var Vector2 = View.Geom.Vector2;
         var LogarithmicGraphManager = (function (_super) {
@@ -388,14 +406,14 @@ var View;
             };
             return LogarithmicGraphManager;
         }(GraphManager));
-        LogarithmicSpiralManager.LogarithmicGraphManager = LogarithmicGraphManager;
-    })(LogarithmicSpiralManager = View.LogarithmicSpiralManager || (View.LogarithmicSpiralManager = {}));
+        Logarithmic.LogarithmicGraphManager = LogarithmicGraphManager;
+    })(Logarithmic = View.Logarithmic || (View.Logarithmic = {}));
 })(View || (View = {}));
 var View;
 (function (View) {
     var Logarithmic;
     (function (Logarithmic) {
-        var LogarithmicGraphManager = View.LogarithmicSpiralManager.LogarithmicGraphManager;
+        var LogarithmicGraphManager = View.Logarithmic.LogarithmicGraphManager;
         var SpiralManager = View.Spiral.SpiralManager;
         var LogarithmicManager = (function (_super) {
             __extends(LogarithmicManager, _super);
@@ -413,6 +431,7 @@ var View;
                 _this.init();
                 _this._graph = new LogarithmicGraphManager();
                 _this.draw();
+                _this.setSpeed();
                 return _this;
             }
             return LogarithmicManager;
@@ -485,6 +504,7 @@ var View;
                 _this.init();
                 _this._graph = new Lituus.LituusGraphManager();
                 _this.draw();
+                _this.setSpeed();
                 return _this;
             }
             return LituusManager;

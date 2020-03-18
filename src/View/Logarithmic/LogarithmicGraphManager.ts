@@ -1,4 +1,4 @@
-namespace View.LogarithmicSpiralManager
+namespace View.Logarithmic
 {
     import GraphManager = View.Spiral.GraphManager;
     import Vector2 = View.Geom.Vector2;

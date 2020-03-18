@@ -1,44 +1,47 @@
 ///<reference path="BallManager.ts"/>
-namespace View.Spiral
-{
+namespace View.Spiral {
     import Vector2 = View.Geom.Vector2;
+
     export class SpiralManager {
-        protected _name:string;
-        protected _svgKey:string;
-        protected _rotationSliderKey:string;
-        protected _rotationValueKey:string;
-        protected _startAngleSliderKey:string;
-        protected _startAngleValueKey:string;
-        protected _radioKey:string;
-        protected _speedSliderKey:string;
-        protected _speedValueKey:string;
+        protected _name: string;
+        protected _svgKey: string;
+        protected _rotationSliderKey: string;
+        protected _rotationValueKey: string;
+        protected _startAngleSliderKey: string;
+        protected _startAngleValueKey: string;
+        protected _radioKey: string;
+        protected _speedSliderKey: string;
+        protected _speedValueKey: string;
         //
-        protected _graph:GraphManager;
+        protected _graph: GraphManager;
         //
-        private _rotationInput:HTMLInputElement;
-        private _rotationValue:HTMLElement;
-        private _startAngleInput:HTMLInputElement;
-        private _startAngleValue:HTMLElement;
-        private _clockwiseList:NodeList;
-        private _speedInput:HTMLInputElement;
-        private _speedValue:HTMLElement;
+        private _rotationInput: HTMLInputElement;
+        private _rotationValue: HTMLElement;
+        private _startAngleInput: HTMLInputElement;
+        private _startAngleValue: HTMLElement;
+        private _clockwiseList: NodeList;
+        private _speedInput: HTMLInputElement;
+        private _speedValue: HTMLElement;
         //
-        private _ballManager:BallManager;
+        private _ballManager: BallManager;
+
         constructor() {
 
         }
-        protected init():void
-        {
-            const change = () =>
-            {
+
+        protected init(): void {
+            const change = () => {
                 this.changeHandler();
             };
-            const mousemove = () =>
-            {
+            const mousemove = () => {
                 this.mousemoveHandler();
             };
+            const mousedown = () =>
+            {
+                this.mousedownHandler();
+            };
             let element = document.createElement('div');
-            let wrapper = document.getElementById("wrapper");
+            let wrapper = document.getElementById("contents");
             wrapper.appendChild(element);
             element.innerHTML = this._name + "<br>"
 
@@ -101,7 +104,7 @@ namespace View.Spiral
             radio.setAttribute("value", "1");
             radio.checked = true;
             child.appendChild(radio);
-            child.innerHTML +="clockwise ";
+            child.innerHTML += "clockwise ";
 
             radio = document.createElement('input');
             radio.setAttribute("type", "radio");
@@ -109,10 +112,10 @@ namespace View.Spiral
             radio.setAttribute("value", "-1");
 
             child.appendChild(radio);
-            child.innerHTML +="anticlockwise";
+            child.innerHTML += "anticlockwise";
             this._clockwiseList = document.getElementsByName(this._radioKey);
-            let radioElement:HTMLInputElement = <HTMLInputElement>this._clockwiseList[0];
-            radioElement.checked  = true;
+            let radioElement: HTMLInputElement = <HTMLInputElement>this._clockwiseList[0];
+            radioElement.checked = true;
             //スピード
             child = document.createElement('div');
             element.appendChild(child);
@@ -134,65 +137,86 @@ namespace View.Spiral
             child.appendChild(this._speedValue);
 
             //events
-            this._rotationInput.addEventListener("change" , change);
-            this._rotationInput.addEventListener("mousemove" , mousemove);
+            this._rotationInput.addEventListener("change", change);
+            //this._rotationInput.addEventListener("mousemove", mousemove);
+            this._rotationInput.addEventListener("mousedown", mousedown);
 
-            this._startAngleInput.addEventListener("change" , change);
-            this._startAngleInput.addEventListener("mousemove" , mousemove);
+            this._startAngleInput.addEventListener("change", change);
+            //this._startAngleInput.addEventListener("mousemove", mousemove);
+            this._startAngleInput.addEventListener("mousedown", mousedown);
+            //
+            const speed = () => {
+                this.speedHandler();
+            };
+            this._speedInput.addEventListener("change", speed);
+            this._speedInput.addEventListener("mousemove", speed);
 
-            this._speedInput.addEventListener("change" , change);
-            this._speedInput.addEventListener("mousemove" , mousemove);
-
-            let n:number = this._clockwiseList.length;
-            for(let i:number = 0;i<n;i++)
-            {
-                let check:HTMLElement = <HTMLElement>this._clockwiseList[i];
-                check.addEventListener("change" , change);
+            let n: number = this._clockwiseList.length;
+            for (let i: number = 0; i < n; i++) {
+                let check: HTMLElement = <HTMLElement>this._clockwiseList[i];
+                check.addEventListener("change", change);
             }
 
             //ball
-            const click = () =>
-            {
+            const click = () => {
                 this.screenClickHandler();
             };
-            svg.addEventListener("click" , click);
-            let layer:SVGElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+            svg.addEventListener("click", click);
+            let layer: SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "g");
             svg.appendChild(layer);
             this._ballManager = new BallManager(layer);
         }
-        public enterFrame():void
-        {
+
+        public enterFrame(): void {
             this._ballManager.enterFrame();
         }
 
-        protected draw():void
-        {
+        protected draw(): void {
             this.setInputValue();
             //
             this._graph.draw();
-            let pointList:Vector2[] = this._graph.pointList;
-
+            let pointList: Vector2[] = this._graph.pointList;
             this._ballManager.setPointList(pointList);
         }
-        private changeHandler():void
-        {
-            this.draw();
-        }
-        private mousemoveHandler():void
-        {
-            this.draw();
-        }
-        private setInputValue():void
-        {
-            this._rotationValue.textContent = this._rotationInput.value;
-            this._startAngleValue.textContent = this._startAngleInput.value + "°";
-            this._speedValue.textContent = this._speedInput.value;
 
+        protected setSpeed(): void {
+            this._speedValue.textContent = this._speedInput.value;
             this._ballManager.setSpeed(this._speedInput.value);
         }
 
-        private screenClickHandler():void
-        {
+        private changeHandler(): void {
+            this.draw();
+        }
+
+        private mousedownHandler(): void {
+            const mousemove = () => {
+                this.mousemoveHandler()
+            };
+            const mouseup = () => {
+                window.removeEventListener("mousemove", mousemove);
+                window.removeEventListener("mouseup", mouseup);
+            }
+
+            window.addEventListener("mousemove", mousemove);
+            window.addEventListener("mouseup", mouseup);
+        }
+
+
+        private mousemoveHandler(): void {
+
+            this.draw();
+        }
+
+        private speedHandler(): void {
+            this.setSpeed();
+        }
+
+        private setInputValue(): void {
+            this._rotationValue.textContent = this._rotationInput.value;
+            this._startAngleValue.textContent = this._startAngleInput.value + "°";
+        }
+
+        private screenClickHandler(): void {
             this._ballManager.start()
         }
     }

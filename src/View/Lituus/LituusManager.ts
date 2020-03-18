@@ -18,6 +18,7 @@ namespace View.Lituus
             this._graph = new LituusGraphManager();
             //
             this.draw();
+            this.setSpeed();
         }
     }
 }
